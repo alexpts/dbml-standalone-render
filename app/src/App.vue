@@ -17,7 +17,7 @@ const fields = [
 
 
 // https://vueflow.dev/guide/vue-flow/config.html#global-edge-options
-let {fitView, nodes, onConnect, addEdges, onEdgeUpdate, updateEdge, autoConnect, onConnectEnd, edges, onNodeDoubleClick, onNodeDragStop, onNodeDrag, findNode, getIncomers, getRectOfNodes, dimensions, updateNodePositions, onEdgeUpdateEnd } = useVueFlow({
+let {fitView, nodes, onNodeDragStop, onConnect, addEdges, onEdgeUpdate, updateEdge, autoConnect, onConnectEnd, edges, onNodeDoubleClick, onNodeDrag, findNode, updateNodePositions, onEdgeUpdateEnd } = useVueFlow({
     id: 'flow-1',
     onlyRenderVisibleElements: true, // в DOM только то что на экране видно
     zoomOnScroll: false,
@@ -26,7 +26,8 @@ let {fitView, nodes, onConnect, addEdges, onEdgeUpdate, updateEdge, autoConnect,
     defaultEdgeOptions: {
         type: 'smoothstep',
         updatable: true,
-        animated: true,
+        animated: false,
+        selectable: true,
     },
     edgeUpdaterRadius: 10,
     connectOnClick: false, // создает edge последовательным кликом на 2 Handle точки межжу ними
@@ -52,28 +53,43 @@ let {fitView, nodes, onConnect, addEdges, onEdgeUpdate, updateEdge, autoConnect,
         { id: 'lot_offer', expandParent: true, type: 'table', label: 'ecomm_core.order_items', connectable:true, position: { x: 100, y: 100 }, data: { fields }},
     ],
     edges: [
-        { id: "e1", source: "lot_offer", sourceHandle: "order_id-right", target: 'lot', targetHandle: "creAt-left", updatable: true, animated: true},
+        { id: "e1", source: "lot_offer", sourceHandle: "order_id-right", target: 'lot', targetHandle: "creAt-left", updatable: true, animated: true, data: {sourceHandle: 'order_id', targetHandle: 'creAt'}},
     ]
 })
 
+// Обовляем связи сторонами автоматичеси к ближайшей стороне
+onNodeDragStop(({node}) => {
+    let relEdges = edges.value.filter(e => node.id === e.source || node.id === e.target)
+    relEdges.map(edge => {
+        const diffStartX = edge.sourceNode.position.x - edge.targetNode.position.x;
+        if (diffStartX < 0) {
+            edge.targetHandle = `${edge.data.targetHandle}-left`
+            edge.sourceHandle = Math.abs(diffStartX) > edge.sourceNode.dimensions.width
+                ? `${edge.data.sourceHandle}-right`
+                : `${edge.data.sourceHandle}-left`
+
+            console.log(edge);
+            console.log(diffStartX, edge.sourceNode.dimensions.width);
+        } else {
+            edge.targetHandle = `${edge.data.targetHandle}-right`
+            edge.sourceHandle = diffStartX > edge.targetNode.dimensions.width
+                ? `${edge.data.sourceHandle}-left`
+                : `${edge.data.sourceHandle}-right`
+        }
+    })
+})
+
 onConnect((params) => {
-    let sourceNode = findNode(params.source)
-    let targetNode = findNode(params.target)
-    console.log(params)
+    let sourceSuffix = params.sourceHandle.slice(-5) === '-left' ? -5 : -6; // -left / -right
+    let targetSuffix = params.targetHandle.slice(-5) === '-left' ? -5 : -6;
 
-    // создать коннект на все поле, и подменять на  скрытые варианты left/right
-    if (sourceNode.position.x + sourceNode.dimensions.width > targetNode.position.x) {
-        alert('1-2')
-    } else {
-        alert('2-1')
+    params.data = {
+        sourceHandle: params.sourceHandle.slice(0, sourceSuffix),
+        targetHandle: params.targetHandle.slice(0, targetSuffix),
     }
-
+    console.log(params);
     addEdges([params])
 })
-// onNodeDragStop((event) => {
-//     // @todo проверить все связи на ноде, вычислить относительно других связей положение и пересоздать ряд связей, поменять left/rigth у связей для коннекта
-//     console.log(event.node);
-// })
 
 // Обновляем связь при перетаскивании связи
 onEdgeUpdate (({ edge, connection }) => {
@@ -122,4 +138,7 @@ onEdgeUpdate (({ edge, connection }) => {
 
 .vue-flow__edge-path
     stroke: #7cadd5
+
+svg:hover .vue-flow__edge-path:hover
+    stroke: #000
 </style>

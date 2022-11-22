@@ -1,7 +1,7 @@
 <template>
     <div class="db-table">
-        <div class="title" @click="increment">{{ table.label }} {{counter}}</div>
-        <div class="field nodrag" v-for="(field, index) in table.data.fields.reverse()" :key="field.name">
+        <div class="title">{{ table.label }}</div>
+        <div class="field nodrag" v-for="(field, index) in table.data.fields" :key="field.name">
             {{ field.name }}
             <Handle type="target" :position="Position.Right" :connectable="true" :id="`${field.name}-right`" />
             <Handle type="source" :position="Position.Left" :connectable="true" :id="`${field.name}-left`" />
@@ -13,13 +13,6 @@
 <script setup>
 import {toRefs, defineProps, ref} from 'vue'
 import { Handle, Position } from '@vue-flow/core'
-
-// const { type } = toRefs(props)
-const counter = ref(0)
-
-const increment = function(event) {
-    counter.value++
-}
 
 defineProps({
     table: {
