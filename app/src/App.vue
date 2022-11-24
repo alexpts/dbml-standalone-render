@@ -1,9 +1,11 @@
 <script setup>
-import {Position, VueFlow, useVueFlow} from '@vue-flow/core'
-import {Background, BackgroundVariant, ControlButton, Controls, MiniMap} from '@vue-flow/additional-components'
 import {ref} from "vue"
+import {VueFlow, useVueFlow} from '@vue-flow/core'
+import {Background, BackgroundVariant, ControlButton, Controls, MiniMap} from '@vue-flow/additional-components'
 
-import ConnectionLine from './SnappableConnectionLine.vue'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue-3/dist/bootstrap-vue-3.css'
+
 import DbTable from "./DbTable.vue"
 import DbGroup from "./DbGroup.vue"
 
@@ -15,14 +17,40 @@ const fields = [
     {name: 'upAt', type: 'datetime'},
 ];
 
+let initialNodes = [
+    //{ id: 'gr-1', selectable: false, zIndex: 0, draggable: true, type: 'group', label: 'group mp', position: { x: 0, y: 0 }, style: {width: '10px', height: '10px'}},
+    // { id: 't-1', position: { x: 350, y: 5 }, parentNode: 'gr-1'},
+    // { id: 't-2', position: { x: 350, y: 50 }, parentNode: 'gr-1'},
+    { id: 'lot', expandParent: true, type: 'table', connectable: true, data: { fields }},
+    { id: 'lot_offer', expandParent: true, type: 'table', connectable: true, data: { fields }},
+    { id: 'event_raw', type: 'table', data: {fields: [
+        {name: 'id', type: 'int8', increment: true, pk: true},
+        {name: 'name', type: 'int2', not_null: true, note: 'Имя события'},
+        {name: 'payload', type: 'json', not_null: true, note: 'json с payload'},
+        {name: 'status', type: 'int2', not_null: true, note: 'статусы 0-new'},
+        {name: 'created_at', type: 'timestamptz', not_null: true, note: 'Дата созданиям'},
+        {name: 'updated_at', type: 'timestamptz', not_null: true, note: 'Дата обновления'},
+        {name: 'idempotent_key', type: 'timestamptz', not_null: true, unique: true, note: 'Ключ идемпотентности'},
+    ]}}
+];
+
+initialNodes.map((node, index) => {
+    node.position ??= { x: index * 180, y: 0 }
+})
+
+let initialEdges = [
+    { id: "e1", markerEnd: {}.ArrowClosed, source: "lot_offer", sourceHandle: "order_id-right", target: 'lot', targetHandle: "creAt-left", updatable: true, animated: true, data: {sourceHandle: 'order_id', targetHandle: 'creAt'}},
+];
+
 
 // https://vueflow.dev/guide/vue-flow/config.html#global-edge-options
-let {fitView, nodes, onNodeDragStop, onConnect, addEdges, onEdgeUpdate, updateEdge, autoConnect, onConnectEnd, edges, onNodeDoubleClick, onNodeDrag, findNode, updateNodePositions, onEdgeUpdateEnd } = useVueFlow({
+let {edges, nodes, fitView, onNodeDragStop, onConnect, addEdges, onEdgeUpdate, updateEdge, autoConnect, onConnectEnd, onNodeDoubleClick, onNodeDrag, findNode, updateNodePositions, onEdgeUpdateEnd } = useVueFlow({
     id: 'flow-1',
     onlyRenderVisibleElements: true, // в DOM только то что на экране видно
     zoomOnScroll: false,
     connectionMode: 'loose', // можно соединят между собой и source/target <-> source/target без проверки типа
     autoConnect: true, // дефолтный обрабочтик для соединения 2 точек
+
     defaultEdgeOptions: {
         type: 'smoothstep',
         updatable: true,
@@ -45,17 +73,11 @@ let {fitView, nodes, onNodeDragStop, onConnect, addEdges, onEdgeUpdate, updateEd
     snapToGrid: false, // перетягиваем шагами
     //noDragClassName: 'nodrag',
     //nodesDraggable: false,
-    nodes: [
-        //{ id: 'gr-1', selectable: false, zIndex: 0, draggable: true, type: 'group', label: 'group mp', position: { x: 0, y: 0 }, style: {width: '10px', height: '10px'}},
-        // { id: 't-1', position: { x: 350, y: 5 }, parentNode: 'gr-1'},
-        // { id: 't-2', position: { x: 350, y: 50 }, parentNode: 'gr-1'},
-        { id: 'lot', expandParent: true, type: 'table', label: 'lot', connectable:true, position: { x: 300, y: 100 }, data: { fields }},
-        { id: 'lot_offer', expandParent: true, type: 'table', label: 'ecomm_core.order_items', connectable:true, position: { x: 100, y: 100 }, data: { fields }},
-    ],
-    edges: [
-        { id: "e1", source: "lot_offer", sourceHandle: "order_id-right", target: 'lot', targetHandle: "creAt-left", updatable: true, animated: true, data: {sourceHandle: 'order_id', targetHandle: 'creAt'}},
-    ]
+    nodes: ref(initialNodes).value,
+    edges: ref(initialEdges).value,
 })
+
+
 
 // Обовляем связи сторонами автоматичеси к ближайшей стороне
 onNodeDragStop(({node}) => {
@@ -98,12 +120,10 @@ onEdgeUpdate (({ edge, connection }) => {
 </script>
 
 <template>
+<!--    <VueFlow id="flow-1" :nodes="initialNodes" :edges="initialEdges">-->
+<!--    <BButton variant="primary">Test</BButton>-->
     <VueFlow id="flow-1">
-        <Controls position="top-right">
-<!--            <ControlButton>-->
-<!--                <i class="fa fa-plus">112</i>-->
-<!--            </ControlButton>-->
-        </Controls>
+        <Controls position="top-right" />
 
         <Background variant="lines" pattern-color="rgb(79 137 224 / 0.2)" gap="40" size="0.4" />
         <MiniMap nodeColor="#17d8b8" nodeStrokeColor="#333" :pannable="true" :zoomable="true"/>
@@ -121,8 +141,6 @@ onEdgeUpdate (({ edge, connection }) => {
 </template>
 
 <style lang="sass">
-//.vue-flow__container, .vue-flow__pane.draggable
-//    cursor: initial
 #app
     font-family: "Open Sans",sans-serif
     //-webkit-font-smoothing: antialiased
@@ -142,3 +160,6 @@ onEdgeUpdate (({ edge, connection }) => {
 svg:hover .vue-flow__edge-path:hover
     stroke: #000
 </style>
+
+<style rel="bootstrap/dist/css/bootstrap.css"></style>
+<style rel="bootstrap-vue-3/dist/bootstrap-vue-3.css"></style>
