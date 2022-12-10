@@ -12,7 +12,6 @@
 
 <script setup lang="ts">
 
-import { defineProps } from 'vue'
 import { Handle, Position } from '@vue-flow/core'
 
 // не работает t-shaking у bootstrap-vue-3 (@todo разобраться)
@@ -31,9 +30,10 @@ let props = defineProps<{
     --vf-handle: #ccc
 
 .vue-flow__handle
-    width: 6px
-    height: 6px
     opacity: 0
+    width: 10px
+    height: 10px
+    border: 4px solid #fff
 
 
 .db-table

@@ -22,8 +22,9 @@ const toggleTableHidden = (table) => {
     <aside class="tables">
         <input class="form-control search" placeholder="поиск" v-model="search"/>
 
-        <div @click="toggleTableHidden(table)" class="table-item" v-for="(table) in store.tables" :key="table.id">
+        <div @click="toggleTableHidden(table)" class="table-item" :class="{hide: table.hidden}" v-for="(table) in store.tables" :key="table.id">
             {{ table.label || table.id }}
+            <i v-show="table.hidden" class="i-eye-off"> </i>
         </div>
     </aside>
 </template>
@@ -46,4 +47,8 @@ const toggleTableHidden = (table) => {
 .table-item:hover
     background: #cedfec
     color: #777
+
+.table-item.hide
+    opacity: 0.4
+
 </style>

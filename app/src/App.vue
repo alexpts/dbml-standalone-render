@@ -4,6 +4,8 @@ import './style.css'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue-3/dist/bootstrap-vue-3.css'
 
+import './vendor/fontello/dbml-embedded.css'
+
 import ERD from './components/ERD/Flow.vue'
 import TableList from './components/TablesList.vue'
 

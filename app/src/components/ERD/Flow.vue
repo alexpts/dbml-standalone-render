@@ -1,5 +1,4 @@
 <script setup>
-import {defineProps} from "vue"
 import {VueFlow, useVueFlow} from '@vue-flow/core'
 import {Background, Controls, MiniMap} from '@vue-flow/additional-components'
 import {useErdStore} from "../../store/ERD.js"
