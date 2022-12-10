@@ -14,7 +14,7 @@ const fields = [
     // {name: 'title', type: 'varchar(255)', ref: {id: "3", type: "source" }},
     {name: 'title', type: 'varchar(255)'},
     {name: 'creAt', type: 'datetime'},
-    {name: 'upAt', type: 'datetime'},
+    {name: 'upAt', type: 'datetime', hidden: false},
 ];
 
 let initialNodes = [
@@ -23,21 +23,31 @@ let initialNodes = [
     // { id: 't-2', position: { x: 350, y: 50 }, parentNode: 'gr-1'},
     { id: 'lot', expandParent: true, type: 'table', connectable: true, data: { fields, hide: true}},
     { id: 'lot_offer', expandParent: true, type: 'table', connectable: true, data: { fields }},
-    { id: 'event_raw', type: 'table', data: {fields: [
-        {name: 'id', type: 'int8', increment: true, pk: true},
-        {name: 'name', type: 'int2', not_null: true, note: 'Имя события'},
-        {name: 'payload', type: 'json', not_null: true, note: 'json с payload'},
-        {name: 'status', type: 'int2', not_null: true, note: 'статусы 0-new'},
-        {name: 'created_at', type: 'timestamptz', not_null: true, note: 'Дата созданиям'},
-        {name: 'updated_at', type: 'timestamptz', not_null: true, note: 'Дата обновления'},
-        {name: 'idempotent_key', type: 'timestamptz', not_null: true, unique: true, note: 'Ключ идемпотентности'},
-    ]}}
+    { id: 'event_raw', type: 'table', data: {
+            fields: [
+                {name: 'id', type: 'int8', increment: true, pk: true},
+                {name: 'name', type: 'int2', not_null: true, note: 'Имя события'},
+                {name: 'payload', type: 'json', not_null: true, note: 'json с payload'},
+                {name: 'status', type: 'int2', not_null: true, note: 'статусы 0-new'},
+                {name: 'created_at', type: 'timestamptz', not_null: true, note: 'Дата созданиям'},
+                {name: 'updated_at', type: 'timestamptz', not_null: true, note: 'Дата обновления'},
+                {
+                    name: 'idempotent_key',
+                    type: 'timestamptz',
+                    not_null: true,
+                    unique: true,
+                    note: 'Ключ идемпотентности'
+                },
+            ],
+            tags: ['event', 'databus']
+        }
+    }
 ];
 
 initialNodes.map((node, index) => {
     node.position ??= { x: index * 180, y: 0 }
     node.data ??= {}
-    node.data.hide ??= false
+    node.data.tags ??= []
 })
 
 let initialEdges = [
@@ -47,7 +57,7 @@ let initialEdges = [
 
 <template>
     <header>DBML Visualizer</header>
-    <div class="flex-row flex-grow-1" >
+    <div class="flex-row flex-grow-1" style="height: 100%">
         <TableList></TableList>
         <ERD class="" :initialNodes="initialNodes" :initialEdges="initialEdges"></ERD>
     </div>
@@ -64,14 +74,24 @@ let initialEdges = [
     width: 100vw
     height: 100vh
     margin: auto
+    overflow: hidden
 
     display: flex
     flex-direction: column
-
 
 header
     box-shadow: 0 -3px 1px -2px #000 inset
     padding: 10px
     background: #316997
     color: #eee
+
+.aside-panel
+    min-width: 240px
+    background: #f7f7f7
+    border-right: 1px solid #ddd
+    color: #777
+
+.invisible-scrollbar::-webkit-scrollbar
+    display: none
+
 </style>>

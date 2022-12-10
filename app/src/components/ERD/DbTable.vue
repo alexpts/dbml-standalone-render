@@ -1,12 +1,15 @@
 <template>
     <div class="db-table">
         <div class="title" v-tooltip.hover.top="'Хранит <b>доступа</b>'">{{ table.id || table.id }}</div>
-        <div class="field nodrag" v-for="(field) in table.data.fields" :key="field.name">
-            <div class="name">{{ field.name }}</div>
-            <div class="type" v-tooltip.hover.right="'Хранит время <b>доступа</b>'">{{ field?.type  }}</div>
-            <Handle type="target" :position="Position.Right" :connectable="true" :id="`${field.name}-right`" />
-            <Handle type="source" :position="Position.Left" :connectable="true" :id="`${field.name}-left`" />
-        </div>
+
+        <template v-for="(field) in table.data.fields" :key="field.name">
+            <div v-if="!field.hidden" class="field nodrag" >
+                <div class="name">{{ field.name }}</div>
+                <div class="type" v-tooltip.hover.right="'Хранит время <b>доступа</b>'">{{ field?.type  }}</div>
+                <Handle type="target" :position="Position.Right" :connectable="true" :id="`${field.name}-right`" />
+                <Handle type="source" :position="Position.Left" :connectable="true" :id="`${field.name}-left`" />
+            </div>
+        </template>
     </div>
 </template>
 
