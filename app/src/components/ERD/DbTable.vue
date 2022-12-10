@@ -1,31 +1,28 @@
 <template>
     <div class="db-table">
-        <div class="title">{{ table.label || table.id }}</div>
-        <div class="field nodrag" v-for="(field, index) in table.data.fields" :key="field.name">
+        <div class="title" v-tooltip.hover.top="'Хранит <b>доступа</b>'">{{ table.id || table.id }}</div>
+        <div class="field nodrag" v-for="(field) in table.data.fields" :key="field.name">
             <div class="name">{{ field.name }}</div>
-<!--            <div class="type" v-tooltip.hover.right="{title: 'My title', delay: 100}" title="Хранит время доступа">{{ field?.type  }}</div>-->
             <div class="type" v-tooltip.hover.right="'Хранит время <b>доступа</b>'">{{ field?.type  }}</div>
             <Handle type="target" :position="Position.Right" :connectable="true" :id="`${field.name}-right`" />
             <Handle type="source" :position="Position.Left" :connectable="true" :id="`${field.name}-left`" />
-            <!-- <Handle id="3" type="target" :position="Position.Right" />-->
         </div>
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 
 import { defineProps } from 'vue'
 import { Handle, Position } from '@vue-flow/core'
-// не работает t-sha
+
+// не работает t-shaking у bootstrap-vue-3 (@todo разобраться)
 import  {vBTooltip as vTooltip} from "bootstrap-vue-3"
+import {GraphNode} from "@vue-flow/core/dist/types/node";
 
 // можно по именам props обращаться без присваивания props и декларации (props = defineProps(), props.table -> можно просто table)
-defineProps({
-    table: {
-        type: Object,
-        required: true,
-    }
-})
+let props = defineProps<{
+    table: GraphNode
+}>()
 
 </script>
 

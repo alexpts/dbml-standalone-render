@@ -1,7 +1,24 @@
-# Vue 3 + Vite
+# DBML Visualizer
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Standalone визуалиатор DBML.
 
-## Recommended IDE Setup
-
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
+## Roadmap
+- [ ] Отображение данных по 1 таблице
+- [ ] Отрисовка полей таблицы и данных о таблице
+- [ ] Фильтр по таблицам
+- [ ] Парсер DBML на javascript
+- [ ] Редактор DBML на странице
+- [ ] Возможность добавдять таблицы
+- [ ] Возможность строить связи
+- [ ] Тегирование таблицы, полей, связей
+- [ ] Поиск и фильр по таблицам, полям, связям
+- [ ] Визуализация группы таблиц (parent)
+- [ ] Цветовая маркировка таблиц
+- [ ] Цветовая маркировка связей
+- [ ] Цветовая маркировка полей
+- [ ] GUI возможность выбора цвета таблицы
+- [x] Отрисовка ERD
+- [x] Отрисовка связей на ERD
+- [x] Скрытие таблиц на ERD
+- [ ] Скрытие полей на ERD
+- [ ] ERD для отрисовки 1 таблицы и графа связей на N уровней

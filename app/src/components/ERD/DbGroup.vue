@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import {toRefs, defineProps, ref} from 'vue'
+import {defineProps} from 'vue'
 
 defineProps({
     group: {
