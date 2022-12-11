@@ -1,7 +1,7 @@
 <script setup>
 import {VueFlow, useVueFlow} from '@vue-flow/core'
 import {Background, Controls, MiniMap} from '@vue-flow/additional-components'
-import {useErdStore} from "../../store/ERD.js"
+import {useErdStore} from "../../store/ERD"
 
 import DbTable from "./DbTable.vue"
 import DbGroup from "./DbGroup.vue"
@@ -21,7 +21,10 @@ const props = defineProps({
 
 
 // https://vueflow.dev/guide/vue-flow/config.html#global-edge-options
-let {edges, nodes, fitView, onNodeDragStop, onConnect, addEdges, onEdgeUpdate, updateEdge, autoConnect, updateNodePositions } = useVueFlow({
+let {
+    edges, nodes, fitView, onNodeDragStop, onConnect, addEdges, onEdgeUpdate, updateEdge, autoConnect,
+    updateNodePositions, onEdgeMouseMove,
+} = useVueFlow({
     id: 'flow-1',
     onlyRenderVisibleElements: true, // в DOM только то что на экране видно
     zoomOnScroll: false,
@@ -58,6 +61,13 @@ store.$patch({
     tables: nodes,
     edges: edges,
 })
+
+// добавить тротлинг
+// onEdgeMouseMove(({edge}) => {
+//     // @todo tooltip с данными о связи через 1 контейнер в DOM + target https://bootstrap-vue.org/docs/components/tooltip
+//     // + pointer-events - http://jsfiddle.net/h2dL07ns/324/
+//     console.log(edge)
+// })
 
 // Обовляем связи сторонами автоматичеси к ближайшей стороне
 onNodeDragStop(({node}) => {

@@ -67,7 +67,7 @@ const toggleChildList = (table) => {
                 <i @click.stop="toggleChildList(table)" :class="[showFieldsMap[table.id] ? 'i-folder-open' : 'i-folder']"></i>
                 <span class="flex-grow-1">{{ table.label || table.id }}</span>
 
-                <i class="i-target" @click.stop v-tooltip.hover.top="'Режим таблицы'"></i>
+                <i class="i-target" :class="{singleMode: store.singleModeTable?.id === table.id}" @click.stop="store.actionModeSingleTable(table)" v-tooltip.hover.top="'Режим таблицы'"></i>
                 <i :class="[table.hidden ? 'i-eye-off' : 'i-eye']" v-tooltip.hover.top="table.hidden ? 'Показать' : 'Скрыть'"></i>
 
                 <div class="fields">
@@ -115,6 +115,10 @@ const toggleChildList = (table) => {
 
 .table-item i
     cursor: pointer
+
+.table-item i.singleMode
+    color: #000
+    font-weight: bold
 
 .table-item i.i-eye, .table-item i.i-eye-off
     margin: 0 8px 0 auto

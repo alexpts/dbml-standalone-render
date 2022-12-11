@@ -89,7 +89,7 @@ header
     min-width: 240px
     background: #f7f7f7
     border-right: 1px solid #ddd
-    color: #777
+    color: #999
 
 .invisible-scrollbar::-webkit-scrollbar
     display: none
