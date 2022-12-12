@@ -138,11 +138,5 @@ svg:hover .vue-flow__edge-path:hover
 
 .vue-flow__controls
     opacity: 0.5
-
 </style>
 
-<style scoped lang="sass">
-.vue-flow__controls
-    opacity: 0.5
-
-</style>

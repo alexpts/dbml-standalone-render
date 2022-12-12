@@ -56,42 +56,65 @@ let initialEdges = [
 </script>
 
 <template>
-    <header>DBML Visualizer</header>
-    <div class="flex-row flex-grow-1" style="height: 100%">
-        <TableList></TableList>
-        <ERD class="" :initialNodes="initialNodes" :initialEdges="initialEdges"></ERD>
+    <header class="comp-layer">DBML Visualizer</header>
+    <div class="middle">
+        <div class="aside-panel comp-layer">
+            <TableList></TableList>
+        </div>
+        <div class="content comp-layer">
+            <ERD :initialNodes="initialNodes" :initialEdges="initialEdges"></ERD>
+        </div>
     </div>
 </template>
 
 
 <style lang="sass">
+.comp-layer
+    will-change: transform
+
+html, body, #app
+    overflow: hidden
+
 #app
     font-family: "Open Sans",sans-serif
     //-webkit-font-smoothing: antialiased
     //-moz-osx-font-smoothing: grayscale
-    //text-align: center
 
     width: 100vw
     height: 100vh
-    margin: auto
-    overflow: hidden
 
     display: flex
     flex-direction: column
 
-header
-    box-shadow: 0 -3px 1px -2px #000 inset
-    padding: 10px
-    background: #316997
-    color: #eee
+    header
+        box-shadow: 0 -3px 1px -2px #000 inset
+        padding: 10px
+        background: #316997
+        color: #eee
 
-.aside-panel
-    min-width: 240px
-    background: #f7f7f7
-    border-right: 1px solid #ddd
-    color: #999
+    .middle
+        position: relative
+        flex-grow: 1
+        display: flex
+        flex-direction: row
+
+        $panel-width: 240px
+        .aside-panel
+            width: $panel-width
+            background: #f7f7f7
+            border-right: 1px solid #ddd
+            color: #999
+            display: flex
+            flex-direction: column
+            position: absolute
+            top: 0
+            bottom: 0
+            left: 0
+
+        .content
+            flex-grow: 1
+            margin-left: $panel-width
 
 .invisible-scrollbar::-webkit-scrollbar
     display: none
-
 </style>>

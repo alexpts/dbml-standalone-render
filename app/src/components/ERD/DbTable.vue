@@ -48,41 +48,41 @@ let props = defineProps<{
     border-radius: 2px
     //opacity: 0.9
 
-.db-table .title
-    padding: 4px 8px
-    font-size: 14px
-    //border-radius: 4px 4px 0 0
-    background: #316896
-    color: #f3f3f3
-    font-weight: bold
-    cursor: move
+    .title
+        padding: 4px 8px
+        font-size: 14px
+        background: #316896
+        color: #f3f3f3
+        font-weight: bold
+        cursor: move
+        border-radius: 3px 3px 0 0
 
-.db-table:hover .title
-    color: #fff
+    &:hover .title
+        color: #fff
 
-.field
-    margin: 0
-    padding: 6px 8px
-    position: relative
-    background: #f2f2f2
-    //box-shadow: inset 0px -2px 0px -2px #000
-    border-top: 1px solid #fff
-    display: flex
-    flex-direction: row
-    justify-content: space-between
-    align-items: center
+    .field
+        margin: 0
+        padding: 6px 8px
+        position: relative
+        background: #f2f2f2
+        //box-shadow: inset 0px -2px 0px -2px #000
+        border-top: 1px solid #fff
+        display: flex
+        flex-direction: row
+        justify-content: space-between
+        align-items: center
 
-.field .type
-    color: #ccc
-    font-size: 10px
-    padding: 0 0 0 8px
+    .field .type
+        color: #ccc
+        font-size: 10px
+        padding: 0 0 0 8px
 
-.field:hover .vue-flow__handle
-    opacity: 1
-    //visibility: visible
+    .field:hover .vue-flow__handle
+        opacity: 1
+        //visibility: visible
 
-.field:hover
-    color: #555
-    background: #d8e7f3
-    //background: #fcfcfc
+    .field:hover
+        color: #555
+        background: #d8e7f3
+        //background: #fcfcfc
 </style>
