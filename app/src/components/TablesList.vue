@@ -62,13 +62,12 @@ const toggleChildList = (table) => {
     <div class="tables">
         <div class="table-item" :class="{hide: table.hidden}"
              v-for="(table) in filteredTables" :key="table.id"
-             @click="table.hidden = !table.hidden"
         >
             <i @click.stop="toggleChildList(table)" :class="[showFieldsMap[table.id] ? 'i-folder-open' : 'i-folder']"></i>
             <span class="flex-grow-1">{{ table.label || table.id }}</span>
 
             <i class="i-target" :class="{singleMode: store.singleModeTable?.id === table.id}" @click.stop="store.actionModeSingleTable(table)" v-tooltip.hover.top="'Режим таблицы'"></i>
-            <i :class="[table.hidden ? 'i-eye-off' : 'i-eye']" v-tooltip.hover.top="table.hidden ? 'Показать' : 'Скрыть'"></i>
+            <i @click="table.hidden = !table.hidden" :class="[table.hidden ? 'i-eye-off' : 'i-eye']" v-tooltip.hover.top="table.hidden ? 'Показать' : 'Скрыть'"></i>
 
             <div class="fields">
                 <div
@@ -102,20 +101,6 @@ input.search::placeholder
 
 .tables
   overflow-y: auto
-
-  &::-webkit-scrollbar-track
-    box-shadow: inset 0 0 1px rgba(0,0,0,.1)
-    border-radius: 8px
-    background-color: #f0f0f0
-
-  &::-webkit-scrollbar
-    width: 5px
-
-  &::-webkit-scrollbar-thumb
-    border-radius: 10px
-    box-shadow: inset 0 0 1px rgba(0,0,0,.2)
-    background-color: #c7d1d9
-
 
 .table-item
     padding: 0 0 0 10px

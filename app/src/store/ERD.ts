@@ -6,6 +6,7 @@ interface ErdState {
     tables: GraphNode[]
     edges: GraphEdge[]
     singleModeTable: GraphNode|null
+    _activeTableInfo: GraphNode|null
 }
 
 export const useErdStore = defineStore('ERD', {
@@ -13,10 +14,12 @@ export const useErdStore = defineStore('ERD', {
         tables: [],
         edges: [],
         singleModeTable: null,
+        _activeTableInfo: null
     }),
 
     getters: {
-        // visibleTables: (state) => state.tables.filter(t => !t.hidden)
+        visibleTables: (state) => state.tables.filter(t => !t.hidden),
+        activeTableInfo: (state) => state._activeTableInfo || state.tables[0] || null,
     },
 
     actions: {

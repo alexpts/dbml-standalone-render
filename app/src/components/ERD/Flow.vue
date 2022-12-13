@@ -25,7 +25,7 @@ let {
     edges, nodes, fitView, onNodeDragStop, onConnect, addEdges, onEdgeUpdate, updateEdge, autoConnect,
     updateNodePositions, onEdgeMouseMove,
 } = useVueFlow({
-    id: 'flow-1',
+    //id: 'flow-1',
     onlyRenderVisibleElements: true, // в DOM только то что на экране видно
     zoomOnScroll: false,
     connectionMode: 'loose', // можно соединят между собой и source/target <-> source/target без проверки типа
@@ -104,32 +104,40 @@ onConnect((params) => {
 })
 
 // Обновляем связь при перетаскивании связи
-onEdgeUpdate (({ edge, connection }) => {
+onEdgeUpdate(({edge, connection}) => {
     updateEdge(edge, connection)
 })
 
 </script>
 
 <template>
-    <VueFlow id="flow-1">
-        <Controls position="top-right" />
+    <VueFlow class="erd">
+        <Controls position="top-right"/>
 
-        <Background variant="lines" pattern-color="rgb(79 137 224 / 0.2)" gap="40" size="0.4" />
+        <Background variant="lines" pattern-color="rgb(79 137 224 / 0.2)" gap="40" size="0.5"/>
         <MiniMap nodeColor="#17d8b8" nodeStrokeColor="#333" :pannable="true" :zoomable="true"/>
 
         <!-- классный пример анимации для FK - https://vueflow.dev/examples/transition.html -->
 
         <template #node-group="node">
-            <DbGroup :group="node" />
+            <DbGroup :group="node"/>
         </template>
         <template #node-table="node">
-            <DbTable :table="node" />
+            <DbTable :table="node"/>
         </template>
     </VueFlow>
 </template>
 
 
 <style lang="sass">
+.erd
+    flex-grow: 1
+    padding: 20px
+    min-height: 94vh
+    border: 1px solid #eee
+    border-radius: 4px
+    background: #fff
+
 .vue-flow__edge-path
     stroke: #7cadd5
 

@@ -1,6 +1,6 @@
 <script setup>
 
-import './style.css'
+//import './style.css'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue-3/dist/bootstrap-vue-3.css'
 
@@ -8,6 +8,13 @@ import './vendor/fontello/dbml-embedded.css'
 
 import ERD from './components/ERD/Flow.vue'
 import TableList from './components/TablesList.vue'
+import {useErdStore} from "./store/ERD";
+import {Parser, dbml} from './components/ERD/dbml-adapter'
+
+const db = Parser.parseDBMLToJSON(dbml)
+{{ console.log(db) }}
+
+const erdStore = useErdStore()
 
 const fields = [
     {name: 'order_id', type: 'int(10)'},
@@ -17,11 +24,15 @@ const fields = [
     {name: 'upAt', type: 'datetime', hidden: false},
 ];
 
+const tableColors = ['#377fee', '#013db3', '#cedfff', '#2eb88e', '#15523f', '#a270e2', '#ffaf37', '#fc5f53', '#cd1003']
+
 let initialNodes = [
     //{ id: 'gr-1', selectable: false, zIndex: 0, draggable: true, type: 'group', label: 'group mp', position: { x: 0, y: 0 }, style: {width: '10px', height: '10px'}},
     // { id: 't-1', position: { x: 350, y: 5 }, parentNode: 'gr-1'},
     // { id: 't-2', position: { x: 350, y: 50 }, parentNode: 'gr-1'},
-    { id: 'lot', expandParent: true, type: 'table', connectable: true, data: { fields, hide: true}},
+    { id: 'lot', expandParent: true, type: 'table', connectable: true, data: {
+        fields, hide: true, color: "#4b9631"
+    }},
     { id: 'lot_offer', expandParent: true, type: 'table', connectable: true, data: { fields }},
     { id: 'event_raw', type: 'table', data: {
             fields: [
@@ -56,12 +67,19 @@ let initialEdges = [
 </script>
 
 <template>
-    <header class="comp-layer">DBML Visualizer</header>
+    <header class="comp-layer">
+        <span class="logo">DBML Visualizer</span>
+        <a href="#" @click.prevent>Таблицы</a>
+        <a href="#" @click.prevent>Связи</a>
+    </header>
     <div class="middle">
-        <div class="aside-panel comp-layer">
+        <div class="aside-panel comp-layer f-col">
             <TableList></TableList>
         </div>
-        <div class="content comp-layer">
+        <div class="content comp-layer f-col">
+            <div>{{ JSON.stringify(db, null, 4) }}</div>
+            <div class="project">Описание проекта</div>
+            <div class="active-table">{{ erdStore.activeTableInfo }}</div>
             <ERD :initialNodes="initialNodes" :initialEdges="initialEdges"></ERD>
         </div>
     </div>
@@ -69,6 +87,10 @@ let initialEdges = [
 
 
 <style lang="sass">
+.f-col
+    display: flex
+    flex-direction: column
+
 .comp-layer
     will-change: transform
 
@@ -90,7 +112,22 @@ html, body, #app
         box-shadow: 0 -3px 1px -2px #000 inset
         padding: 10px
         background: #316997
-        color: #eee
+        color: #ddd
+        display: flex
+        justify-content: start
+
+        .logo
+            color: #fff
+
+        a
+            color: inherit
+            text-decoration: none
+            margin: 0 12px
+            border-bottom: 2px solid transparent
+
+            &:hover
+                color: #fff
+                border-bottom: 2px solid #fff
 
     .middle
         position: relative
@@ -104,8 +141,6 @@ html, body, #app
             background: #f7f7f7
             border-right: 1px solid #ddd
             color: #999
-            display: flex
-            flex-direction: column
             position: absolute
             top: 0
             bottom: 0
@@ -113,8 +148,29 @@ html, body, #app
 
         .content
             flex-grow: 1
-            margin-left: $panel-width
+            left: $panel-width // compensation aside
+            right: 0
+            top: 0
+            bottom: 0
+            overflow-y: scroll
+            position: absolute
+            padding: 20px
 
+
+// scroll
 .invisible-scrollbar::-webkit-scrollbar
     display: none
+
+::-webkit-scrollbar-track
+    box-shadow: inset 0 0 1px rgba(0,0,0,.1)
+    border-radius: 8px
+    background-color: #f0f0f0
+
+::-webkit-scrollbar
+    width: 5px
+
+::-webkit-scrollbar-thumb
+    border-radius: 10px
+    box-shadow: inset 0 0 1px rgba(0,0,0,.2)
+    background-color: #c7d1d9
 </style>>

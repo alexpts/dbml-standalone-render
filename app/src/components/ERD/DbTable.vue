@@ -1,6 +1,6 @@
 <template>
     <div class="db-table">
-        <div class="title" v-tooltip.hover.top="'Хранит <b>доступа</b>'">{{ table.id || table.id }}</div>
+        <div :style="{background: table.data.color} " class="title" __v-tooltip.hover.top="'Хранит <b>доступа</b>'">{{ table.id || table.id }}</div>
 
         <template v-for="(field) in table.data.fields" :key="field.name">
             <div v-if="!field.hidden" class="field nodrag" >
