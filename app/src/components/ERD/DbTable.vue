@@ -1,11 +1,11 @@
 <template>
-    <div class="db-table">
-        <div :style="{background: table.data.color} " class="title" __v-tooltip.hover.top="'Хранит <b>доступа</b>'">{{ table.id || table.id }}</div>
+    <div class="db-table" @mouseenter="OnEnter">
+        <div :style="{background: table.data.color} " class="title" v-tooltip.hover.top="{title: table.data.dbmlTable.note || ''}">{{ getTableNameWithNamespace(table) }}</div>
 
-        <template v-for="(field) in table.data.fields" :key="field.name">
-            <div v-if="!field.hidden" class="field nodrag" >
+        <template v-for="(field) in table.data.dbmlTable.fields" :key="field.name">
+            <div v-if="!field.hidden" class="field nodrag">
                 <div class="name">{{ field.name }}</div>
-                <div class="type" v-tooltip.hover.right="'Хранит время <b>доступа</b>'">{{ field?.type  }}</div>
+                <div class="type" v-tooltip.hover.right="'Хранит время <b>доступа</b>'">{{ field?.type?.type_name  }}</div>
                 <Handle type="target" :position="Position.Right" :connectable="true" :id="`${field.name}-right`" />
                 <Handle type="source" :position="Position.Left" :connectable="true" :id="`${field.name}-left`" />
             </div>
@@ -25,6 +25,14 @@ import {GraphNode} from "@vue-flow/core/dist/types/node";
 let props = defineProps<{
     table: GraphNode
 }>()
+
+// Getter
+const getTableNameWithNamespace = (table: GraphNode): string => {
+    let prefix = table.data.dbmlTable.schemaName
+    prefix = prefix ? prefix + '.' : ''
+
+    return prefix + (table.label || table.id)
+}
 
 </script>
 

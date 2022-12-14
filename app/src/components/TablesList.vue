@@ -9,16 +9,12 @@ const store = useErdStore()
 
 const search = ref('')
 const searchMode = ref('Таблица')
-const showFieldsMap = ref({
-    lot: true,
-    lot_offer: true,
-    event_raw: true
-})
+const showFieldsMap = ref({}) // @todo save to local storage
 
 const filterByTableId = (t: GraphNode) => t.id.includes(search.value)
 const filterByTag = (t: GraphNode) => t.data.tags.indexOf(search.value) !== -1
 const filterByField = (t: GraphNode) => {
-    const foundField = t.data.fields.find(f => f.name === search.value)
+    const foundField = t.data.dbmlTable.fields.find(f => f.name === search.value)
     return foundField !== undefined
 }
 
@@ -44,6 +40,15 @@ const toggleChildList = (table) => {
     showFieldsMap.value[table.id] = !showFieldsMap.value[table.id]
 }
 
+// Getter
+const getTableNameWithNamespace = (table: GraphNode): string => {
+    return table.id
+    // let prefix = table.data.dbmlTable.schemaName
+    // prefix = prefix ? prefix + '.' : ''
+    //
+    // return prefix + (table.label || table.id)
+}
+
 </script>
 
 <template>
@@ -53,9 +58,9 @@ const toggleChildList = (table) => {
             {{ searchMode }}
         </button>
         <ul class="dropdown-menu dropdown-menu-end">
-            <li><a @click.prevent="changeSearchMode('Таблица')" class="dropdown-item" href="#">Таблица</a></li>
-            <li><a @click.prevent="changeSearchMode('Тег')" class="dropdown-item" href="#">Тег</a></li>
-            <li><a @click.prevent="changeSearchMode('Поле')" class="dropdown-item" href="#">Поле</a></li>
+            <li><a @click.prevent.passive="changeSearchMode('Таблица')" class="dropdown-item" href="#">Таблица</a></li>
+            <li><a @click.prevent.passive="changeSearchMode('Тег')" class="dropdown-item" href="#">Тег</a></li>
+            <li><a @click.prevent.passive="changeSearchMode('Поле')" class="dropdown-item" href="#">Поле</a></li>
         </ul>
     </div>
 
@@ -64,7 +69,7 @@ const toggleChildList = (table) => {
              v-for="(table) in filteredTables" :key="table.id"
         >
             <i @click.stop="toggleChildList(table)" :class="[showFieldsMap[table.id] ? 'i-folder-open' : 'i-folder']"></i>
-            <span class="flex-grow-1">{{ table.label || table.id }}</span>
+            <span class="flex-grow-1">{{ getTableNameWithNamespace(table) }}</span>
 
             <i class="i-target" :class="{singleMode: store.singleModeTable?.id === table.id}" @click.stop="store.actionModeSingleTable(table)" v-tooltip.hover.top="'Режим таблицы'"></i>
             <i @click="table.hidden = !table.hidden" :class="[table.hidden ? 'i-eye-off' : 'i-eye']" v-tooltip.hover.top="table.hidden ? 'Показать' : 'Скрыть'"></i>
@@ -75,7 +80,7 @@ const toggleChildList = (table) => {
                     class="field"
                     :class="{isSearch: searchMode === 'Поле' && search === field.name, hide: field.hidden }"
                     v-if="showFieldsMap[table.id]"
-                    v-for="(field) in table.data.fields"
+                    v-for="(field) in table.data.dbmlTable.fields"
                 >
                     {{ field.name }}
                     <i :class="[field.hidden ? 'i-eye-off' : 'i-eye']" v-tooltip.hover.top="field.hidden ? 'Показать' : 'Скрыть'"> </i>

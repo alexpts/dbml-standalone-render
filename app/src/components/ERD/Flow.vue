@@ -1,5 +1,5 @@
 <script setup>
-import {VueFlow, useVueFlow} from '@vue-flow/core'
+import {VueFlow, useVueFlow, ConnectionMode} from '@vue-flow/core'
 import {Background, Controls, MiniMap} from '@vue-flow/additional-components'
 import {useErdStore} from "../../store/ERD"
 
@@ -23,12 +23,11 @@ const props = defineProps({
 // https://vueflow.dev/guide/vue-flow/config.html#global-edge-options
 let {
     edges, nodes, fitView, onNodeDragStop, onConnect, addEdges, onEdgeUpdate, updateEdge, autoConnect,
-    updateNodePositions, onEdgeMouseMove,
+    updateNodePositions, onNodeMouseEnter
 } = useVueFlow({
-    //id: 'flow-1',
     onlyRenderVisibleElements: true, // в DOM только то что на экране видно
     zoomOnScroll: false,
-    connectionMode: 'loose', // можно соединят между собой и source/target <-> source/target без проверки типа
+    connectionMode: ConnectionMode.Loose, // можно соединят между собой и source/target <-> source/target без проверки типа
     autoConnect: true, // дефолтный обрабочтик для соединения 2 точек
     defaultEdgeOptions: {
         type: 'smoothstep',
@@ -72,7 +71,15 @@ store.$patch({
 // Обовляем связи сторонами автоматичеси к ближайшей стороне
 onNodeDragStop(({node}) => {
     let relEdges = store.edges.filter(e => node.id === e.source || node.id === e.target)
-    relEdges.map(edge => {
+    autoDetectConnectPositionForEdges(relEdges)
+})
+
+// перестраиваем левые/правые точки связей
+autoDetectConnectPositionForEdges(edges.value)
+
+// Обовляем связи сторонами автоматичеси к ближайшей стороне
+function autoDetectConnectPositionForEdges(edges) {
+    edges.map(edge => {
         const diffStartX = edge.sourceNode.position.x - edge.targetNode.position.x;
         if (diffStartX < 0) {
             edge.targetHandle = `${edge.data.targetHandle}-left`
@@ -89,7 +96,7 @@ onNodeDragStop(({node}) => {
                 : `${edge.data.sourceHandle}-right`
         }
     })
-})
+}
 
 onConnect((params) => {
     let sourceSuffix = params.sourceHandle.slice(-5) === '-left' ? -5 : -6; // -left / -right
@@ -133,6 +140,7 @@ onEdgeUpdate(({edge, connection}) => {
 .erd
     flex-grow: 1
     padding: 20px
+    margin-top: 40px
     min-height: 94vh
     border: 1px solid #eee
     border-radius: 4px
@@ -146,5 +154,8 @@ svg:hover .vue-flow__edge-path:hover
 
 .vue-flow__controls
     opacity: 0.5
+
+.vue-flow__edge-textwrapper
+    opacity: 0.3
 </style>
 

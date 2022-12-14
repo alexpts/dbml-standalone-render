@@ -9,61 +9,61 @@ import './vendor/fontello/dbml-embedded.css'
 import ERD from './components/ERD/Flow.vue'
 import TableList from './components/TablesList.vue'
 import {useErdStore} from "./store/ERD";
-import {Parser, dbml} from './components/ERD/dbml-adapter'
+import {Parser, dbml, convertDbmlFormatToVueFlow} from './components/ERD/dbml-adapter'
 
-const db = Parser.parseDBMLToJSON(dbml)
-{{ console.log(db) }}
+let db
+try {
+    db = Parser.parseDBMLToJSON(dbml)
+    console.log(db)
+} catch (e) {
+    console.error('Can`t parse dbml', e)
+}
+
+const [initialNodes, initialEdges] = convertDbmlFormatToVueFlow(db)
+console.log(initialNodes)
 
 const erdStore = useErdStore()
 
-const fields = [
-    {name: 'order_id', type: 'int(10)'},
-    // {name: 'title', type: 'varchar(255)', ref: {id: "3", type: "source" }},
-    {name: 'title', type: 'varchar(255)'},
-    {name: 'creAt', type: 'datetime'},
-    {name: 'upAt', type: 'datetime', hidden: false},
-];
+//let fields = []
+//
+// let initialNodes = [
+//     //{ id: 'gr-1', selectable: false, zIndex: 0, draggable: true, type: 'group', label: 'group mp', position: { x: 0, y: 0 }, style: {width: '10px', height: '10px'}},
+//     // { id: 't-1', position: { x: 350, y: 5 }, parentNode: 'gr-1'},
+//     // { id: 't-2', position: { x: 350, y: 50 }, parentNode: 'gr-1'},
+//     { id: 'lot', expandParent: true, type: 'table', connectable: true, data: {
+//         fields, hide: true, color: "#4b9631"
+//     }},
+//     { id: 'lot_offer', expandParent: true, type: 'table', connectable: true, data: { fields }},
+//     { id: 'event_raw', type: 'table', data: {
+//             fields: [
+//                 {name: 'id', type: 'int8', increment: true, pk: true},
+//                 {name: 'name', type: 'int2', not_null: true, note: 'Имя события'},
+//                 {name: 'payload', type: 'json', not_null: true, note: 'json с payload'},
+//                 {name: 'status', type: 'int2', not_null: true, note: 'статусы 0-new'},
+//                 {name: 'created_at', type: 'timestamptz', not_null: true, note: 'Дата созданиям'},
+//                 {name: 'updated_at', type: 'timestamptz', not_null: true, note: 'Дата обновления'},
+//                 {
+//                     name: 'idempotent_key',
+//                     type: 'timestamptz',
+//                     not_null: true,
+//                     unique: true,
+//                     note: 'Ключ идемпотентности'
+//                 },
+//             ],
+//             tags: ['event', 'databus']
+//         }
+//     }
+// ];
+//
+// initialNodes.map((node, index) => {
+//     node.position ??= { x: index * 180, y: 0 }
+//     node.data ??= {}
+//     node.data.tags ??= []
+// })
 
-const tableColors = ['#377fee', '#013db3', '#cedfff', '#2eb88e', '#15523f', '#a270e2', '#ffaf37', '#fc5f53', '#cd1003']
-
-let initialNodes = [
-    //{ id: 'gr-1', selectable: false, zIndex: 0, draggable: true, type: 'group', label: 'group mp', position: { x: 0, y: 0 }, style: {width: '10px', height: '10px'}},
-    // { id: 't-1', position: { x: 350, y: 5 }, parentNode: 'gr-1'},
-    // { id: 't-2', position: { x: 350, y: 50 }, parentNode: 'gr-1'},
-    { id: 'lot', expandParent: true, type: 'table', connectable: true, data: {
-        fields, hide: true, color: "#4b9631"
-    }},
-    { id: 'lot_offer', expandParent: true, type: 'table', connectable: true, data: { fields }},
-    { id: 'event_raw', type: 'table', data: {
-            fields: [
-                {name: 'id', type: 'int8', increment: true, pk: true},
-                {name: 'name', type: 'int2', not_null: true, note: 'Имя события'},
-                {name: 'payload', type: 'json', not_null: true, note: 'json с payload'},
-                {name: 'status', type: 'int2', not_null: true, note: 'статусы 0-new'},
-                {name: 'created_at', type: 'timestamptz', not_null: true, note: 'Дата созданиям'},
-                {name: 'updated_at', type: 'timestamptz', not_null: true, note: 'Дата обновления'},
-                {
-                    name: 'idempotent_key',
-                    type: 'timestamptz',
-                    not_null: true,
-                    unique: true,
-                    note: 'Ключ идемпотентности'
-                },
-            ],
-            tags: ['event', 'databus']
-        }
-    }
-];
-
-initialNodes.map((node, index) => {
-    node.position ??= { x: index * 180, y: 0 }
-    node.data ??= {}
-    node.data.tags ??= []
-})
-
-let initialEdges = [
-    { id: "e1", markerEnd: {}.ArrowClosed, source: "lot_offer", sourceHandle: "order_id-right", target: 'lot', targetHandle: "creAt-left", updatable: true, animated: true, data: {sourceHandle: 'order_id', targetHandle: 'creAt'}},
-];
+// let initialEdges = [
+//     //{ id: "e1", markerEnd: {}.ArrowClosed, source: "lot_offer", sourceHandle: "order_id-right", target: 'lot', targetHandle: "creAt-left", updatable: true, animated: true, data: {sourceHandle: 'order_id', targetHandle: 'creAt'}},
+// ];
 </script>
 
 <template>
@@ -77,9 +77,8 @@ let initialEdges = [
             <TableList></TableList>
         </div>
         <div class="content comp-layer f-col">
-            <div>{{ JSON.stringify(db, null, 4) }}</div>
             <div class="project">Описание проекта</div>
-            <div class="active-table">{{ erdStore.activeTableInfo }}</div>
+<!--            <div class="active-table">{{ erdStore.activeTableInfo }}</div>-->
             <ERD :initialNodes="initialNodes" :initialEdges="initialEdges"></ERD>
         </div>
     </div>
@@ -130,14 +129,16 @@ html, body, #app
                 border-bottom: 2px solid #fff
 
     .middle
+        --left-panel-width: 240px
+
         position: relative
         flex-grow: 1
         display: flex
         flex-direction: row
 
-        $panel-width: 240px
+
         .aside-panel
-            width: $panel-width
+            width: var(--left-panel-width)
             background: #f7f7f7
             border-right: 1px solid #ddd
             color: #999
@@ -148,7 +149,7 @@ html, body, #app
 
         .content
             flex-grow: 1
-            left: $panel-width // compensation aside
+            left: var(--left-panel-width) // compensation for left panel
             right: 0
             top: 0
             bottom: 0

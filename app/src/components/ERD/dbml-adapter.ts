@@ -1,4 +1,11 @@
-export { Parser } from '@dbml/core'
+import {RawDatabase} from "@dbml/core/types/model_structure/database";
+import {Edge, Node} from "@vue-flow/core";
+import Table from "@dbml/core/types/model_structure/table";
+import Ref from "@dbml/core/types/model_structure/ref";
+import Endpoint from "@dbml/core/types/model_structure/endpoint";
+
+
+export {Parser} from '@dbml/core'
 
 export const dbml = `
 //// -- LEVEL 1
@@ -6,8 +13,9 @@ export const dbml = `
 
 // Creating tables
 // You can define the tables with full schema names
+
 Table ecommerce.merchants {
-  id int
+  id int(8, 3)
   country_code int
   merchant_name varchar
 
@@ -16,6 +24,8 @@ Table ecommerce.merchants {
   Indexes {
     (id, country_code) [pk]
   }
+
+   note: "Описание таблицы"
 }
 
 // If schema name is omitted, it will default to "public" schema.
@@ -103,3 +113,59 @@ Ref: ecommerce.product_tags.id <> ecommerce.products.id // many-to-many
 //composite foreign key
 Ref: ecommerce.merchant_periods.(merchant_id, country_code) > ecommerce.merchants.(id, country_code)
 `
+
+/**
+ * Преобразует dbml таблицы/связи в формат для VueFlow
+ */
+export const convertDbmlFormatToVueFlow = (db: RawDatabase): [Node[], Edge[]] => {
+    replaceTableNameFromAlias(db)
+    return [
+        db.tables.map(convertTable),
+        db.refs.map(convertRefs),
+    ];
+}
+
+const replaceTableNameFromAlias = (db: RawDatabase): void => {
+    db.refs.map((ref) => {
+        ref.endpoints.map((endpoint: Endpoint) => {
+            const name = endpoint.tableName
+            const alias = db.aliases.find(item => item.kind === 'table' && item.name === name)
+            if (alias) {
+                endpoint.tableName = alias.value.tableName
+            }
+        })
+    })
+}
+
+const convertRefs = (ref: Ref, index): Edge => {
+    const [e0, e1] = ref.endpoints
+
+    return {
+        id: `ref-${index}`,
+        source: e0.tableName,
+        sourceHandle: e0.fieldNames[0] + '-left', // @todo multi fields case
+        target: e1.tableName,
+        targetHandle: e1.fieldNames[0] + '-left',
+        label: `${e0.tableName}.${e0.fieldNames[0]} [${e0.relation}] :: ${e1.tableName}.${e1.fieldNames[0]} [${e1.relation}]`,
+        updatable: true,
+        data: {
+            sourceHandle: e0.fieldNames[0],
+            targetHandle: e1.fieldNames[0],
+        }
+    }
+}
+
+const convertTable = (table: Table, index): Node => {
+    return {
+        id: table.name,
+        type: 'table',
+        position: {x: index * 180, y: 0},
+        draggable: true,
+        expandParent: true,
+        connectable: true,
+        data: {
+            dbmlTable: table,
+            tags: [],
+        }
+    }
+}
