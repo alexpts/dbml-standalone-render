@@ -14,11 +14,12 @@
   "dependencies": {
     "@dbml/core": "^2.4.4",
     "@popperjs/core": "^2.11.6",
-    "@vue-flow/additional-components": "^1.3.2",
-    "@vue-flow/core": "^1.5.7",
-    "@vue-flow/resize-rotate-node": "^1.0.2",
+    "@vue-flow/background": "^1.0.0",
+    "@vue-flow/controls": "^1.0.0",
+    "@vue-flow/core": "1.6.0",
+    "@vue-flow/minimap": "^1.0.0",
     "bootstrap": "^5.2.3",
-    "bootstrap-vue-3": "^0.4.14",
+    "bootstrap-vue-3": "^0.4.15",
     "pinia": "^2.0.28",
     "sass": "^1.56.2",
     "vue": "^3.2.45"
@@ -26,6 +27,6 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.0.0",
     "unplugin-vue-components": "^0.22.12",
-    "vite": "^4.0.0"
+    "vite": "^4.0.1"
   }
 }

@@ -1,6 +1,11 @@
 <script setup>
 import {VueFlow, useVueFlow, ConnectionMode} from '@vue-flow/core'
-import {Background, Controls, MiniMap} from '@vue-flow/additional-components'
+
+import {Controls} from "@vue-flow/controls"
+import '@vue-flow/controls/dist/style.css'
+import {Background} from "@vue-flow/background"
+import {MiniMap} from "@vue-flow/minimap"
+
 import {useErdStore} from "../../store/ERD"
 
 import DbTable from "./DbTable.vue"
