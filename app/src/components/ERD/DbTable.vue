@@ -1,16 +1,19 @@
 <template>
-    <div class="db-table" @mouseenter="OnEnter">
-        <div :style="{background: table.data.color} " class="title" v-tooltip.hover.top="{title: table.data.dbmlTable.note || ''}">{{ getTableNameWithNamespace(table) }}</div>
-
-        <template v-for="(field) in table.data.dbmlTable.fields" :key="field.name">
-            <div v-if="!field.hidden" class="field nodrag">
-                <div class="name">{{ field.name }}</div>
-                <div class="type" v-tooltip.hover.right="'Хранит время <b>доступа</b>'">{{ field?.type?.type_name  }}</div>
-                <Handle type="target" :position="Position.Right" :connectable="true" :id="`${field.name}-right`" />
-                <Handle type="source" :position="Position.Left" :connectable="true" :id="`${field.name}-left`" />
-            </div>
-        </template>
-    </div>
+        <div class="db-table">
+            <div id="title" :style="{background: table.data.color} " class="title"
+                 v-tooltip.hover.top="{
+            title: table.data.dbmlTable.note || ''
+        }">{{ getTableNameWithNamespace(table) }}</div>
+            <template v-for="(field) in table.data.dbmlTable.fields" :key="field.name">
+                <div v-if="!field.hidden" class="field nodrag">
+                    <Handle type="source" :position="Position.Left" :connectable="true" :id="field.name" />
+                    <div class="name">{{ field.name }}</div>
+                    <div class="type" v-tooltip.hover.right="'Хранит время <b>доступа</b>'">{{ field?.type?.type_name  }}</div>
+                    <!--                <Han<Handle type="target" :position="Position.Right" :connectable="true" :id="`${field.name}-right`" />-->
+                    <!--                <Handle type="source" :position="Position.Left" :connectable="true" :id="`${field.name}-left`" />-->
+                </div>
+            </template>
+        </div>
 </template>
 
 <script setup lang="ts">
@@ -45,16 +48,18 @@ const getTableNameWithNamespace = (table: GraphNode): string => {
     width: 10px
     height: 10px
     border: 4px solid #fff
-
+    top: 50%
+    left: 50%
+    transform: translate(-50%, -50%)
 
 .db-table
     color: #6f6f6f
-    min-width: 140px
+    min-width: 160px
     background: #fcfcfc
     font-size: 12px
     border: 1px solid #fff
     border-radius: 2px
-    //opacity: 0.9
+    //opacity: 0.7
 
     .title
         padding: 4px 8px

@@ -15,6 +15,9 @@ defineProps({
 </script>
 
 <style lang="sass">
+.vue-flow__node
+    cursor: default
+
 .vue-flow__node-group
     display: flex
 

@@ -10,6 +10,8 @@ import {useErdStore} from "../../store/ERD"
 
 import DbTable from "./DbTable.vue"
 import DbGroup from "./DbGroup.vue"
+import CustomConnectionLine from "./CustomConnectionLine.vue";
+import CustomEdge from "./CustomEdge.vue";
 
 const store = useErdStore()
 
@@ -28,14 +30,14 @@ const props = defineProps({
 // https://vueflow.dev/guide/vue-flow/config.html#global-edge-options
 let {
     edges, nodes, fitView, onNodeDragStop, onConnect, addEdges, onEdgeUpdate, updateEdge, autoConnect,
-    updateNodePositions, onNodeMouseEnter
+    updateNodePositions, onNodeMouseEnter, onNodeMouseLeave, onEdgeMouseEnter
 } = useVueFlow({
     onlyRenderVisibleElements: true, // в DOM только то что на экране видно
     zoomOnScroll: false,
     connectionMode: ConnectionMode.Loose, // можно соединят между собой и source/target <-> source/target без проверки типа
     autoConnect: true, // дефолтный обрабочтик для соединения 2 точек
     defaultEdgeOptions: {
-        type: 'smoothstep',
+        type: 'custom_edge_1',
         updatable: true,
         animated: false,
         selectable: true,
@@ -48,8 +50,7 @@ let {
     minZoom: 0.1,
     panOnDrag: false, // можно ли тянуть полотно через клиек(зажим) и перемещение мыши
     panOnScrollSpeed: 1.8,
-    connectionLineType: "smoothstep", // deprecated
-    elevateEdgesOnSelect: true, // edge связи поверх node делает связанные
+    elevateEdgesOnSelect: false, // поднимает z-index edge связям активным
     elementsSelectable: false,
     //panOnDrag: false,
     //snapGrid: [50, 50],
@@ -66,52 +67,19 @@ store.$patch({
     edges: edges,
 })
 
-// добавить тротлинг
-// onEdgeMouseMove(({edge}) => {
-//     // @todo tooltip с данными о связи через 1 контейнер в DOM + target https://bootstrap-vue.org/docs/components/tooltip
-//     // + pointer-events - http://jsfiddle.net/h2dL07ns/324/
-//     console.log(edge)
-// })
 
-// Обовляем связи сторонами автоматичеси к ближайшей стороне
-onNodeDragStop(({node}) => {
-    let relEdges = store.edges.filter(e => node.id === e.source || node.id === e.target)
-    autoDetectConnectPositionForEdges(relEdges)
+onNodeMouseEnter(({connectedEdges, event, node}) => {
+    connectedEdges.forEach(e => e.selected = true)
 })
 
-// перестраиваем левые/правые точки связей
-autoDetectConnectPositionForEdges(edges.value)
+onNodeMouseLeave(({connectedEdges, event, node}) => {
+    connectedEdges.forEach(e => e.selected = false)
+})
 
-// Обовляем связи сторонами автоматичеси к ближайшей стороне
-function autoDetectConnectPositionForEdges(edges) {
-    edges.map(edge => {
-        const diffStartX = edge.sourceNode.position.x - edge.targetNode.position.x;
-        if (diffStartX < 0) {
-            edge.targetHandle = `${edge.data.targetHandle}-left`
-            edge.sourceHandle = Math.abs(diffStartX) > edge.sourceNode.dimensions.width
-                ? `${edge.data.sourceHandle}-right`
-                : `${edge.data.sourceHandle}-left`
+onEdgeMouseEnter()
 
-            //console.log(edge);
-            //console.log(diffStartX, edge.sourceNode.dimensions.width);
-        } else {
-            edge.targetHandle = `${edge.data.targetHandle}-right`
-            edge.sourceHandle = diffStartX > edge.targetNode.dimensions.width
-                ? `${edge.data.sourceHandle}-left`
-                : `${edge.data.sourceHandle}-right`
-        }
-    })
-}
-
-onConnect((params) => {
-    let sourceSuffix = params.sourceHandle.slice(-5) === '-left' ? -5 : -6; // -left / -right
-    let targetSuffix = params.targetHandle.slice(-5) === '-left' ? -5 : -6;
-
-    params.data = {
-        sourceHandle: params.sourceHandle.slice(0, sourceSuffix),
-        targetHandle: params.targetHandle.slice(0, targetSuffix),
-    }
-
+// Добавляем edge при коннекте 2 точек
+onConnect(params => {
     addEdges([params])
 })
 
@@ -120,6 +88,11 @@ onEdgeUpdate(({edge, connection}) => {
     updateEdge(edge, connection)
 })
 
+
+const onEnter = function() {
+    console.log('111', arguments)
+    debugger
+}
 </script>
 
 <template>
@@ -137,6 +110,14 @@ onEdgeUpdate(({edge, connection}) => {
         <template #node-table="node">
             <DbTable :table="node"/>
         </template>
+
+<!--        <template #connection-line="connectionLineProps">-->
+<!--            <CustomConnectionLine v-bind="connectionLineProps" />-->
+<!--        </template>-->
+
+        <template #edge-custom_edge_1="props">
+            <CustomEdge v-bind="props" />
+        </template>
     </VueFlow>
 </template>
 
@@ -153,9 +134,6 @@ onEdgeUpdate(({edge, connection}) => {
 
 .vue-flow__edge-path
     stroke: #7cadd5
-
-svg:hover .vue-flow__edge-path:hover
-    stroke: #000
 
 .vue-flow__controls
     opacity: 0.5

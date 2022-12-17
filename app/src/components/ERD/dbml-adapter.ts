@@ -1,5 +1,5 @@
 import {RawDatabase} from "@dbml/core/types/model_structure/database";
-import {Edge, Node} from "@vue-flow/core";
+import {Edge, Node} from "@vue-flow/core/dist/types";
 import Table from "@dbml/core/types/model_structure/table";
 import Ref from "@dbml/core/types/model_structure/ref";
 import Endpoint from "@dbml/core/types/model_structure/endpoint";
@@ -45,8 +45,8 @@ Table countries {
 // Creating references
 // You can also define relaionship separately
 // > many-to-one; < one-to-many; - one-to-one; <> many-to-many
-Ref: U.country_code > countries.code
-Ref: ecommerce.merchants.country_code > countries.code
+//Ref: U.country_code > countries.code
+//Ref: ecommerce.merchants.country_code > countries.code
 
 //----------------------------------------------//
 
@@ -59,7 +59,7 @@ Table ecommerce.order_items {
   quantity int [default: 1] // default value
 }
 
-Ref: ecommerce.order_items.product_id > ecommerce.products.id
+//Ref: ecommerce.order_items.product_id > ecommerce.products.id
 
 Table ecommerce.orders {
   id int [pk] // primary key
@@ -95,23 +95,23 @@ Table ecommerce.products {
   }
 }
 
-Table ecommerce.product_tags {
-  id int [pk]
-  name varchar
-}
+// Table ecommerce.product_tags {
+//   id int [pk]
+//   name varchar
+// }
 
-Table ecommerce.merchant_periods {
-  id int [pk]
-  merchant_id int
-  country_code int
-  start_date datetime
-  end_date datetime
-}
+// Table ecommerce.merchant_periods {
+//   id int [pk]
+//   merchant_id int
+//   country_code int
+//   start_date datetime
+//   end_date datetime
+// }
 
 Ref: ecommerce.products.merchant_id > ecommerce.merchants.id // many-to-one
-Ref: ecommerce.product_tags.id <> ecommerce.products.id // many-to-many
+//Ref: ecommerce.product_tags.id <> ecommerce.products.id // many-to-many
 //composite foreign key
-Ref: ecommerce.merchant_periods.(merchant_id, country_code) > ecommerce.merchants.(id, country_code)
+//Ref: ecommerce.merchant_periods.(merchant_id, country_code) > ecommerce.merchants.(id, country_code)
 `
 
 /**
@@ -142,15 +142,15 @@ const convertRefs = (ref: Ref, index): Edge => {
 
     return {
         id: `ref-${index}`,
+        //type: 'custom_edge_1', // @see defaultEdgeOptions
         source: e0.tableName,
-        sourceHandle: e0.fieldNames[0] + '-left', // @todo multi fields case
+        sourceHandle: e0.fieldNames[0], // @todo multi fields case
         target: e1.tableName,
-        targetHandle: e1.fieldNames[0] + '-left',
+        targetHandle: e1.fieldNames[0],
         label: `${e0.tableName}.${e0.fieldNames[0]} [${e0.relation}] :: ${e1.tableName}.${e1.fieldNames[0]} [${e1.relation}]`,
-        updatable: true,
         data: {
-            sourceHandle: e0.fieldNames[0],
-            targetHandle: e1.fieldNames[0],
+            sourceRelation: e0.relation,
+            targetRelation: e1.relation,
         }
     }
 }
