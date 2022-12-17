@@ -86,6 +86,9 @@ const erdStore = useErdStore()
 
 
 <style lang="sass">
+\:root
+    --left-panel-width: 260px
+
 .f-col
     display: flex
     flex-direction: column
@@ -129,8 +132,6 @@ html, body, #app
                 border-bottom: 2px solid #fff
 
     .middle
-        --left-panel-width: 240px
-
         position: relative
         flex-grow: 1
         display: flex

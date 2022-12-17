@@ -1,14 +1,11 @@
 <template>
-        <div class="db-table">
-            <div id="title" :style="{background: table.data.color} " class="title"
-                 v-tooltip.hover.top="{
-            title: table.data.dbmlTable.note || ''
-        }">{{ getTableNameWithNamespace(table) }}</div>
+        <div id="table" class="db-table">
+            <div id="title" :style="{background: table.data.color} " class="title" v-tooltip:table.hover.top="{title: table.data.dbmlTable.note || ''}">{{ getTableNameWithNamespace(table) }}</div>
             <template v-for="(field) in table.data.dbmlTable.fields" :key="field.name">
                 <div v-if="!field.hidden" class="field nodrag">
                     <Handle type="source" :position="Position.Left" :connectable="true" :id="field.name" />
                     <div class="name">{{ field.name }}</div>
-                    <div class="type" v-tooltip.hover.right="'Хранит время <b>доступа</b>'">{{ field?.type?.type_name  }}</div>
+                    <div class="type" v-tooltip.hover.right="{title: field.note || ''}">{{ field?.type?.type_name  }}</div>
                     <!--                <Han<Handle type="target" :position="Position.Right" :connectable="true" :id="`${field.name}-right`" />-->
                     <!--                <Handle type="source" :position="Position.Left" :connectable="true" :id="`${field.name}-left`" />-->
                 </div>
@@ -52,6 +49,9 @@ const getTableNameWithNamespace = (table: GraphNode): string => {
     left: 50%
     transform: translate(-50%, -50%)
 
+.selected > .db-table
+    outline: 1px solid #839fd2
+
 .db-table
     color: #6f6f6f
     min-width: 160px
@@ -75,7 +75,7 @@ const getTableNameWithNamespace = (table: GraphNode): string => {
 
     .field
         margin: 0
-        padding: 6px 8px
+        padding: 4px 8px
         position: relative
         background: #f2f2f2
         //box-shadow: inset 0px -2px 0px -2px #000

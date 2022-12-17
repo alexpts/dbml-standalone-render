@@ -32,7 +32,7 @@ let {
     edges, nodes, fitView, onNodeDragStop, onConnect, addEdges, onEdgeUpdate, updateEdge, autoConnect,
     updateNodePositions, onNodeMouseEnter, onNodeMouseLeave, onEdgeMouseEnter
 } = useVueFlow({
-    onlyRenderVisibleElements: true, // в DOM только то что на экране видно
+    //onlyRenderVisibleElements: true, // в DOM только то что на экране видно
     zoomOnScroll: false,
     connectionMode: ConnectionMode.Loose, // можно соединят между собой и source/target <-> source/target без проверки типа
     autoConnect: true, // дефолтный обрабочтик для соединения 2 точек
@@ -45,7 +45,7 @@ let {
     edgeUpdaterRadius: 10,
     connectOnClick: false, // создает edge последовательным кликом на 2 Handle точки межжу ними
     panOnScroll: true,
-    fitViewOnInit: true,
+    //fitViewOnInit: true,
     maxZoom: 5,
     minZoom: 0.1,
     panOnDrag: false, // можно ли тянуть полотно через клиек(зажим) и перемещение мыши
@@ -67,16 +67,15 @@ store.$patch({
     edges: edges,
 })
 
-
+// @todo options
 onNodeMouseEnter(({connectedEdges, event, node}) => {
     connectedEdges.forEach(e => e.selected = true)
 })
 
+// @todo options
 onNodeMouseLeave(({connectedEdges, event, node}) => {
     connectedEdges.forEach(e => e.selected = false)
 })
-
-onEdgeMouseEnter()
 
 // Добавляем edge при коннекте 2 точек
 onConnect(params => {
@@ -84,9 +83,9 @@ onConnect(params => {
 })
 
 // Обновляем связь при перетаскивании связи
-onEdgeUpdate(({edge, connection}) => {
-    updateEdge(edge, connection)
-})
+// onEdgeUpdate(({edge, connection}) => {
+//     updateEdge(edge, connection)
+// })
 
 
 const onEnter = function() {
