@@ -16,12 +16,12 @@
     "@popperjs/core": "^2.11.6",
     "@vue-flow/background": "^1.0.0",
     "@vue-flow/controls": "^1.0.0",
-    "@vue-flow/core": "1.6.3",
+    "@vue-flow/core": "1.6.4",
     "@vue-flow/minimap": "^1.0.0",
     "bootstrap": "^5.2.3",
     "bootstrap-vue-3": "^0.4.15",
     "pinia": "^2.0.28",
-    "sass": "^1.56.2",
+    "sass": "^1.57.0",
     "vue": "^3.2.45"
   },
   "devDependencies": {
