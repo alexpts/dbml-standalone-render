@@ -1,13 +1,11 @@
 <template>
-        <div id="table" class="db-table">
+        <div class="db-table">
             <div id="title" :style="{background: table.data.color} " class="title" v-tooltip:table.hover.top="{title: table.data.dbmlTable.note || ''}">{{ getTableNameWithNamespace(table) }}</div>
             <template v-for="(field) in table.data.dbmlTable.fields" :key="field.name">
                 <div v-if="!field.hidden" class="field nodrag">
                     <Handle type="source" :position="Position.Left" :connectable="true" :id="field.name" />
                     <div class="name">{{ field.name }}</div>
                     <div class="type" v-tooltip.hover.right="{title: field.note || ''}">{{ field?.type?.type_name  }}</div>
-                    <!--                <Han<Handle type="target" :position="Position.Right" :connectable="true" :id="`${field.name}-right`" />-->
-                    <!--                <Handle type="source" :position="Position.Left" :connectable="true" :id="`${field.name}-left`" />-->
                 </div>
             </template>
         </div>

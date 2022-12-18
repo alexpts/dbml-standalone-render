@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import {VueFlow, useVueFlow, ConnectionMode} from '@vue-flow/core'
 
 import {Controls} from "@vue-flow/controls"
@@ -12,6 +12,8 @@ import DbTable from "./DbTable.vue"
 import DbGroup from "./DbGroup.vue"
 import CustomConnectionLine from "./CustomConnectionLine.vue";
 import CustomEdge from "./CustomEdge.vue";
+import {GraphNode} from "@vue-flow/core/dist/types/node";
+import {Ref} from "vue";
 
 const store = useErdStore()
 
@@ -30,9 +32,9 @@ const props = defineProps({
 // https://vueflow.dev/guide/vue-flow/config.html#global-edge-options
 let {
     edges, nodes, fitView, onNodeDragStop, onConnect, addEdges, onEdgeUpdate, updateEdge, autoConnect,
-    updateNodePositions, onNodeMouseEnter, onNodeMouseLeave, onEdgeMouseEnter
+    updateNodePositions, onNodeMouseEnter, onNodeMouseLeave, onEdgeMouseEnter, onNodesInitialized
 } = useVueFlow({
-    //onlyRenderVisibleElements: true, // в DOM только то что на экране видно
+    onlyRenderVisibleElements: false, // в DOM только то что на экране видно
     zoomOnScroll: false,
     connectionMode: ConnectionMode.Loose, // можно соединят между собой и source/target <-> source/target без проверки типа
     autoConnect: true, // дефолтный обрабочтик для соединения 2 точек
@@ -61,21 +63,52 @@ let {
     edges: props.initialEdges,
 })
 
+// Расчитываем позиции таблиц на холсте по геометрии таблиц и наличию связей
+let initPosition = (nodes: Ref<GraphNode[]>): void => {
+    // @todo добавить логику основанную на наличией связей
+    let x = 0
+    let y = 0
+    let offset = 80
+    const maxY = 900
+    let maxWidthInColumn = 0
+
+    nodes.value.forEach((table: GraphNode) => {
+        //console.log(x, table.dimensions.width)
+        table.position.x = x
+        table.position.y = y
+
+        const newY = y + table.dimensions.height
+        if (newY > maxY) {
+            y = 0
+            x +=  table.dimensions.width > maxWidthInColumn ? table.dimensions.width : maxWidthInColumn
+            x += offset
+            maxWidthInColumn = 0
+        } else {
+            y = newY + offset
+            maxWidthInColumn = table.dimensions.width > maxWidthInColumn ? table.dimensions.width : maxWidthInColumn
+        }
+    })
+}
+
 // через store nodes/edges шарим между компонентами приложения
 store.$patch({
     tables: nodes,
     edges: edges,
 })
 
-// @todo options
-onNodeMouseEnter(({connectedEdges, event, node}) => {
-    connectedEdges.forEach(e => e.selected = true)
+onNodesInitialized(() => {
+    initPosition(nodes)
 })
 
 // @todo options
-onNodeMouseLeave(({connectedEdges, event, node}) => {
-    connectedEdges.forEach(e => e.selected = false)
-})
+// onNodeMouseEnter(({connectedEdges, event, node}) => {
+//     connectedEdges.forEach(e => e.selected = true)
+// })
+
+// @todo options
+// onNodeMouseLeave(({connectedEdges, event, node}) => {
+//     connectedEdges.forEach(e => e.selected = false)
+// })
 
 // Добавляем edge при коннекте 2 точек
 onConnect(params => {
@@ -87,11 +120,6 @@ onConnect(params => {
 //     updateEdge(edge, connection)
 // })
 
-
-const onEnter = function() {
-    console.log('111', arguments)
-    debugger
-}
 </script>
 
 <template>
@@ -100,8 +128,6 @@ const onEnter = function() {
 
         <Background variant="lines" pattern-color="rgb(79 137 224 / 0.2)" gap="40" size="0.5"/>
         <MiniMap nodeColor="#17d8b8" nodeStrokeColor="#333" :pannable="true" :zoomable="true"/>
-
-        <!-- классный пример анимации для FK - https://vueflow.dev/examples/transition.html -->
 
         <template #node-group="node">
             <DbGroup :group="node"/>

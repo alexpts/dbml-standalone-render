@@ -96,10 +96,10 @@ let state = computed(() => {
 Потом уже красоту наведем из заготовленных линий
 -->
 <template>
-    <text font-size="11px" fill="#ccc" :x="sourceX + state.sourceXCompensation + (state.sourceIsLeft ? -6 : 0)"
+    <text font-size="14px" fill="#ccc" :x="sourceX + state.sourceXCompensation + (state.sourceIsLeft ? -6 : 0)"
           :y="sourceY - 6">{{ state.sourceRelation }}
     </text>
-    <text font-size="11px" fill="#ccc" :x="targetX + state.targetXCompensation + (state.sourceIsLeft ? 0 : -6)"
+    <text font-size="14px" fill="#ccc" :x="targetX + state.targetXCompensation + (state.sourceIsLeft ? 0 : -6)"
           :y="targetY - 6">{{ state.targetRelation }}
     </text>
 

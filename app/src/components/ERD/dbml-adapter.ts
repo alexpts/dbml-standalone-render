@@ -159,7 +159,8 @@ const convertTable = (table: Table, index): Node => {
     return {
         id: table.name,
         type: 'table',
-        position: {x: index * 180, y: 0},
+        //position: {x: index * 300, y: 0},
+        position: {x: 0, y: 0}, // после создания node с геометрией делаем расчет и расстановку
         draggable: true,
         expandParent: true,
         connectable: true,

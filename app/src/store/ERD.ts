@@ -14,7 +14,7 @@ export const useErdStore = defineStore('ERD', {
         tables: [],
         edges: [],
         singleModeTable: null,
-        _activeTableInfo: null
+        _activeTableInfo: null,
     }),
 
     getters: {
@@ -27,17 +27,23 @@ export const useErdStore = defineStore('ERD', {
          * Скрывает все таблицы, кроме table и прямую связь на 1 шаг по графу
          */
         actionModeSingleTable(table: GraphNode): void {
-            console.log(this.singleModeTable)
-
             this.singleModeTable = this.singleModeTable?.id === table.id ? null : table
             const hideAll = this.singleModeTable !== null
 
-            this.tables.forEach((t: GraphNode) => t.hidden = hideAll)
-            table.hidden = false
+            this.$patch((state) => {
+                let size = state.tables.length
+                let tables = state.tables
+                while (size--) {
+                    tables[size].hidden = hideAll // под капотом долгие unmount в vue-flow
+                }
+
+                table.hidden = false
+                table.data.hide = false
+            })
 
             if (this.singleModeTable) {
                 this.edges.forEach((edge: GraphEdge) => {
-                    if (edge.sourceNode.id === table.id || edge.targetNode?.id === table.id) {
+                    if (edge.sourceNode.id === table.id || edge.targetNode.id === table.id) {
                         edge.sourceNode.hidden = false
                         edge.targetNode.hidden = false
                     }

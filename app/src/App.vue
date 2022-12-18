@@ -77,7 +77,11 @@ const erdStore = useErdStore()
             <TableList></TableList>
         </div>
         <div class="content comp-layer f-col">
-            <div class="project">Описание проекта</div>
+            <div class="project">
+                <h4>Проект: {{ db.project?.name || "Новый проект" }}</h4>
+                {{db.project?.note}}
+            </div>
+
 <!--            <div class="active-table">{{ erdStore.activeTableInfo }}</div>-->
             <ERD :initialNodes="initialNodes" :initialEdges="initialEdges"></ERD>
         </div>
@@ -87,7 +91,7 @@ const erdStore = useErdStore()
 
 <style lang="sass">
 \:root
-    --left-panel-width: 260px
+    --left-panel-width: 300px
 
 .f-col
     display: flex

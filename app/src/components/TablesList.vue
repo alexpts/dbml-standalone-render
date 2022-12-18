@@ -106,6 +106,7 @@ input.search::placeholder
 
 .tables
   overflow-y: auto
+  font-size: 14px
 
 .table-item
     padding: 0 0 0 10px
@@ -117,9 +118,8 @@ input.search::placeholder
 
     .title
         flex-grow: 1
-        max-width: calc(var(--left-panel-width) - 100px)
+        max-width: calc(var(--left-panel-width) - 84px)
         overflow: auto
-
 
     i
         cursor: pointer
@@ -130,7 +130,7 @@ input.search::placeholder
 
 
     i.i-eye, i.i-eye-off
-        margin: 0 8px 0 auto
+        margin: 0 4px 0 auto
 
     i.i-folder, i.i-folder-open
         margin: 0 4px 0 0
@@ -140,10 +140,10 @@ input.search::placeholder
 
     .fields
         width: 100%
-        margin: 6px 0
+        margin: 3px 0
 
         .field
-            padding: 4px 0 4px 8px
+            padding: 2px 0 2px 8px
             display: flex
             cursor: pointer
             border-radius: 3px 0 0 3px
