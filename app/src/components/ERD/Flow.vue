@@ -13,7 +13,8 @@ import DbGroup from "./DbGroup.vue"
 import CustomConnectionLine from "./CustomConnectionLine.vue";
 import CustomEdge from "./CustomEdge.vue";
 import {GraphNode} from "@vue-flow/core/dist/types/node";
-import {Ref} from "vue";
+import {ref, Ref} from "vue";
+import {debounce} from '../../utils.js'
 
 const store = useErdStore()
 
@@ -28,13 +29,16 @@ const props = defineProps({
     }
 })
 
+let isScrollPane: Ref<boolean> = ref(false)
+
 
 // https://vueflow.dev/guide/vue-flow/config.html#global-edge-options
 let {
     edges, nodes, fitView, onNodeDragStop, onConnect, addEdges, onEdgeUpdate, updateEdge, autoConnect,
-    updateNodePositions, onNodeMouseEnter, onNodeMouseLeave, onEdgeMouseEnter, onNodesInitialized
+    updateNodePositions, onNodeMouseEnter, onNodeMouseLeave, onEdgeMouseEnter, onNodesInitialized,
+    onPaneScroll
 } = useVueFlow({
-    onlyRenderVisibleElements: false, // в DOM только то что на экране видно
+    //onlyRenderVisibleElements: false, // в DOM только то что на экране видно
     zoomOnScroll: false,
     connectionMode: ConnectionMode.Loose, // можно соединят между собой и source/target <-> source/target без проверки типа
     autoConnect: true, // дефолтный обрабочтик для соединения 2 точек
@@ -96,6 +100,13 @@ store.$patch({
     edges: edges,
 })
 
+const paneScrollHandler = debounce(function () {
+    isScrollPane.value = true
+}, 2000, true, () => {
+    isScrollPane.value = false
+})
+onPaneScroll(paneScrollHandler)
+
 onNodesInitialized(() => {
     initPosition(nodes)
 })
@@ -105,7 +116,7 @@ onNodesInitialized(() => {
 //     connectedEdges.forEach(e => e.selected = true)
 // })
 
-// @todo options
+//  @todo options
 // onNodeMouseLeave(({connectedEdges, event, node}) => {
 //     connectedEdges.forEach(e => e.selected = false)
 // })
@@ -123,7 +134,7 @@ onConnect(params => {
 </script>
 
 <template>
-    <VueFlow class="erd">
+    <VueFlow class="erd" :class="{isScrollPane}">
         <Controls position="top-right"/>
 
         <Background variant="lines" pattern-color="rgb(79 137 224 / 0.2)" gap="40" size="0.5"/>
@@ -133,7 +144,7 @@ onConnect(params => {
             <DbGroup :group="node"/>
         </template>
         <template #node-table="node">
-            <DbTable :table="node"/>
+            <DbTable :class="{isScrollPane}" :table="node"/>
         </template>
 
 <!--        <template #connection-line="connectionLineProps">-->
@@ -165,5 +176,8 @@ onConnect(params => {
 
 .vue-flow__edge-textwrapper
     opacity: 0.3
+
+.isScrollPane .vue-flow__nodes, .isScrollPane .db-table
+    pointer-events: none!important
 </style>
 
