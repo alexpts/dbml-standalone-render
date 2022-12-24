@@ -16,18 +16,21 @@
     "@popperjs/core": "^2.11.6",
     "@vue-flow/background": "^1.0.0",
     "@vue-flow/controls": "^1.0.0",
-    "@vue-flow/core": "1.7.2",
+    "@vue-flow/core": "1.8.0",
     "@vue-flow/minimap": "^1.0.0",
+    "ace-builds": "^1.14.0",
     "bootstrap": "^5.2.3",
     "bootstrap-vue-3": "^0.4.15",
     "pinia": "^2.0.28",
     "sass": "^1.57.1",
     "vue": "^3.2.45",
-    "vue-router": "^4.1.6"
+    "vue-router": "^4.1.6",
+    "vue3-ace-editor": "^2.2.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.0.0",
     "unplugin-vue-components": "^0.22.12",
-    "vite": "^4.0.3"
+    "vite": "^4.0.3",
+    "vite-plugin-singlefile": "^0.13.2"
   }
 }
