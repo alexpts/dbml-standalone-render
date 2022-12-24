@@ -4,8 +4,7 @@ import Table from "@dbml/core/types/model_structure/table";
 import Ref from "@dbml/core/types/model_structure/ref";
 import Endpoint from "@dbml/core/types/model_structure/endpoint";
 
-
-export {Parser} from '@dbml/core'
+export {default as parseDBMLToJSON} from '@dbml/core/lib/parse/dbmlParser'
 
 export const dbml = `
 //// -- LEVEL 1

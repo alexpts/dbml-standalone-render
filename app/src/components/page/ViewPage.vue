@@ -3,11 +3,14 @@
 import ERD from '../ERD/Flow.vue'
 import TableList from '../TablesList.vue'
 import {useErdStore} from "../../store/ERD";
-import {Parser, dbml, convertDbmlFormatToVueFlow} from '../ERD/dbml-adapter'
+import {parseDBMLToJSON, dbml, convertDbmlFormatToVueFlow} from '../ERD/dbml-adapter'
+
+const erdStore = useErdStore()
+const dbmlRaw = erdStore.dbmlRaw || dbml
 
 let db
 try {
-    db = Parser.parseDBMLToJSON(dbml)
+    db = parseDBMLToJSON.parse(dbmlRaw)
     console.log(db)
 } catch (e) {
     console.error('Can`t parse dbml', e)
@@ -15,8 +18,6 @@ try {
 
 const [initialNodes, initialEdges] = convertDbmlFormatToVueFlow(db)
 console.log(initialNodes)
-
-const erdStore = useErdStore()
 
 //let fields = []
 //
