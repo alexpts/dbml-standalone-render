@@ -21,7 +21,27 @@ export const useErdStore = defineStore('ERD', {
 
     getters: {
         visibleTables: (state) => state.tables.filter(t => !t.hidden),
-        activeTableInfo: (state) => state._activeTableInfo || state.tables[0] || null,
+        activeTableInfo: (state) => {
+            let table = state._activeTableInfo || state.tables[0] || null
+            if (table === null) {
+                return null
+            }
+
+            const t = table.data.dbmlTable;
+
+            return {
+                name: t.name,
+                note: t.note,
+                tags: t.tags || [],
+                fields: t.fields.map((field) => {
+                    return {
+                        name: field.name,
+                        note: field.note,
+                        type: field.type.schemaName ? field.type.schemaName + '.' + field.type.type_name : field.type.type_name,
+                    }
+                })
+            }
+        },
     },
 
     actions: {
