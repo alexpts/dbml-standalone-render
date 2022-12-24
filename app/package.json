@@ -31,6 +31,7 @@
     "@vitejs/plugin-vue": "^4.0.0",
     "unplugin-vue-components": "^0.22.12",
     "vite": "^4.0.3",
+    "vite-plugin-compression": "^0.5.1",
     "vite-plugin-singlefile": "^0.13.2"
   }
 }
