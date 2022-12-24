@@ -26,3 +26,4 @@ Standalone визуалиатор DBML.
 - [ ] Resize left-panel
 - [ ] Custom ConnectionLine через SVG, чтобы точка была всем полем + расчет от центра либо от края кастомный path
 - [x] перетягивать несколько таблиц (cmd + click выделяем несколько, потом тянем)
+- [ ] single html mode + demo github pages

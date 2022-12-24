@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {GraphNode} from "@vue-flow/core/dist/types/node";
-import {vBTooltip as vTooltip} from "bootstrap-vue-3"
+import {vBTooltip} from "bootstrap-vue-3"
 
 import {ref, computed} from "vue";
 import {useErdStore} from "../store/ERD.js"
@@ -72,7 +72,7 @@ const getTableNameWithNamespace = (table: GraphNode): string => {
             <span class="title invisible-scrollbar">{{ getTableNameWithNamespace(table) }}</span>
 
             <i class="i-target" :class="{singleMode: store.singleModeTable?.id === table.id}" @click.stop="store.actionModeSingleTable(table)" v-tooltip.hover.top="'Режим таблицы'"></i>
-            <i @click="table.hidden = !table.hidden" :class="[table.hidden ? 'i-eye-off' : 'i-eye']" v-tooltip.hover.top="table.hidden ? 'Показать' : 'Скрыть'"></i>
+            <i @click="table.hidden = !table.hidden" :class="[table.hidden ? 'i-eye-off' : 'i-eye']" v-b-tooltip.hover.top="table.hidden ? 'Показать' : 'Скрыть'"></i>
 
             <div class="fields">
                 <div

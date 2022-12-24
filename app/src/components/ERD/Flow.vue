@@ -33,12 +33,14 @@ let isScrollPane: Ref<boolean> = ref(false)
 
 
 // https://vueflow.dev/guide/vue-flow/config.html#global-edge-options
+// https://reactflow.dev/docs/api/react-flow-props/
 let {
     edges, nodes, fitView, onNodeDragStop, onConnect, addEdges, onEdgeUpdate, updateEdge, autoConnect,
     updateNodePositions, onNodeMouseEnter, onNodeMouseLeave, onEdgeMouseEnter, onNodesInitialized,
     onPaneScroll
 } = useVueFlow({
     //onlyRenderVisibleElements: false, // в DOM только то что на экране видно
+    disableKeyboardA11y: false,
     zoomOnScroll: false,
     connectionMode: ConnectionMode.Loose, // можно соединят между собой и source/target <-> source/target без проверки типа
     autoConnect: true, // дефолтный обрабочтик для соединения 2 точек

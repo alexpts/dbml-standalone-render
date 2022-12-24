@@ -6,11 +6,13 @@ interface ErdState {
     tables: GraphNode[]
     edges: GraphEdge[]
     singleModeTable: GraphNode|null
-    _activeTableInfo: GraphNode|null
+    _activeTableInfo: GraphNode|null,
+    dbmlRaw: string
 }
 
 export const useErdStore = defineStore('ERD', {
     state: (): ErdState => ({
+        dbmlRaw: "",
         tables: [],
         edges: [],
         singleModeTable: null,
