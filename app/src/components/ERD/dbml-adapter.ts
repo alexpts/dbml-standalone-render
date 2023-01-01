@@ -154,7 +154,7 @@ const convertRefs = (ref: Ref, index): Edge => {
     }
 }
 
-const convertTable = (table: Table, index): Node => {
+const convertTable = (table: Table, index: number): Node => {
     return {
         id: table.name,
         type: 'table',
@@ -165,7 +165,12 @@ const convertTable = (table: Table, index): Node => {
         connectable: true,
         data: {
             dbmlTable: table,
-            tags: [],
+            tags: ['au'],
+            fields: {
+                id: {
+                    tags: index === 0 ? ['pk'] : []
+                }
+            }
         }
     }
 }

@@ -2,6 +2,7 @@
 
 import ERD from '../ERD/Flow.vue'
 import TableList from '../TablesList.vue'
+import TagsTableList from '../TagsTableList.vue'
 import {useErdStore} from "../../store/ERD";
 import {parseDBMLToJSON, dbml, convertDbmlFormatToVueFlow} from '../ERD/dbml-adapter'
 
@@ -17,13 +18,17 @@ try {
 }
 
 const [initialNodes, initialEdges] = convertDbmlFormatToVueFlow(db)
+erdStore.initTags(initialNodes)
+// init tags
+
 console.log(initialNodes)
 </script>
 
 <template>
     <div class="middle">
         <div class="aside-panel comp-layer f-col">
-            <TableList></TableList>
+            <TagsTableList class="widget"></TagsTableList>
+            <TableList class="widget"></TableList>
         </div>
         <div class="content comp-layer f-col">
             <div class="project">
@@ -42,5 +47,15 @@ console.log(initialNodes)
 
 
 <style lang="sass">
+.aside-panel
+    overflow-y: auto
+
+    .widget
+        border-bottom: 1px solid #eee
+        padding: 4px
+        .w-title
+            padding: 8px
+            margin: 0
+            font-size: 14px
 
 </style>>

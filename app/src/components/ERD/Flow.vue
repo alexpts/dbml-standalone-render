@@ -10,7 +10,7 @@ import {useErdStore} from "../../store/ERD"
 
 import DbTable from "./DbTable.vue"
 import DbGroup from "./DbGroup.vue"
-import CustomConnectionLine from "./CustomConnectionLine.vue";
+// import CustomConnectionLine from "./CustomConnectionLine.vue";
 import CustomEdge from "./CustomEdge.vue";
 import {GraphNode} from "@vue-flow/core/dist/types/node";
 import {ref, Ref} from "vue";
@@ -57,7 +57,7 @@ let {
     maxZoom: 5,
     minZoom: 0.1,
     panOnDrag: false, // можно ли тянуть полотно через клиек(зажим) и перемещение мыши
-    panOnScrollSpeed: 1.8,
+    //panOnScrollSpeed: 1.0,
     elevateEdgesOnSelect: false, // поднимает z-index edge связям активным
     elementsSelectable: false,
     //panOnDrag: false,
