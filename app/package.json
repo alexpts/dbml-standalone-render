@@ -20,7 +20,7 @@
     "@vue-flow/minimap": "^1.0.0",
     "ace-builds": "^1.14.0",
     "bootstrap": "^5.2.3",
-    "bootstrap-vue-3": "^0.4.15",
+    "bootstrap-vue-3": "^0.5.0",
     "pinia": "^2.0.28",
     "sass": "^1.57.1",
     "vue": "^3.2.45",
@@ -30,7 +30,7 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.0.0",
     "unplugin-vue-components": "^0.22.12",
-    "vite": "^4.0.3",
+    "vite": "^4.0.4",
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-singlefile": "^0.13.2"
   }
