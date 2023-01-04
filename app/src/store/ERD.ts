@@ -1,7 +1,9 @@
-import { defineStore } from 'pinia'
-import {GraphNode} from "@vue-flow/core/dist/types/node";
-import {GraphEdge} from "@vue-flow/core/dist/types/edge";
-import {Node} from "@vue-flow/core/dist/types";
+import {defineStore} from 'pinia'
+import {GraphNode} from "@vue-flow/core/dist/types/node"
+import {GraphEdge} from "@vue-flow/core/dist/types/edge"
+import {Edge, Node} from "@vue-flow/core/dist/types"
+import {dbml} from '../components/ERD/demo-dbml'
+import {mergeWith} from 'lodash-es'
 
 type Filters = {
     tags: Object
@@ -13,12 +15,17 @@ interface ErdState {
     singleModeTable: GraphNode|null
     _activeTableInfo: GraphNode|null,
     dbmlRaw: string,
+    extraData: Object,
     filters: Filters
 }
 
 export const useErdStore = defineStore('ERD', {
     state: (): ErdState => ({
-        dbmlRaw: "",
+        dbmlRaw: dbml,
+        extraData: {
+            nodes: {},
+            edges: {},
+        }, // объект конфигурации из yaml
         tables: [],
         edges: [],
         singleModeTable: null,
@@ -50,8 +57,7 @@ export const useErdStore = defineStore('ERD', {
                 }
 
                 // Теги в фильтрах
-                // @ts-ignore
-                for (const [name, field] of Object.entries(table.data.fields || {})) {
+                for (const [_, field] of Object.entries(table.data.fields || {})) {
                     if (field.tags.find(t => tags[t])) {
                         return true
                     }
@@ -95,11 +101,21 @@ export const useErdStore = defineStore('ERD', {
 
                 node.data.fields ??= {}
                 // @ts-ignore
-                for (const [name, data] of Object.entries(node.data.fields)) {
+                for (const [_, data] of Object.entries(node.data.fields)) {
                     data.tags.forEach(tag => {
                         this.filters.tags[tag] = false
                     })
                 }
+            })
+        },
+        applyExtraData(nodes: Node[], edges: Edge[]): void {
+            nodes.forEach((node: Node) => {
+                mergeWith(node, this.extraData.nodes?.[node.id], (destValue, sourceValue, key: String, dest, source, stack: Number) => {
+                    if (Array.isArray(destValue) && Array.isArray(sourceValue)) {
+                        // @todo custom for any cases, для ряда кейсов нужно объединять
+                        return destValue.concat(sourceValue);
+                    }
+                })
             })
         },
         /**

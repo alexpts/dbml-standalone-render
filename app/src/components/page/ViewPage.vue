@@ -1,23 +1,31 @@
-<script setup>
+<script setup lang="ts">
 
 import ERD from '../ERD/Flow.vue'
 import TableList from '../TablesList.vue'
 import TagsTableList from '../TagsTableList.vue'
 import {useErdStore} from "../../store/ERD";
-import {parseDBMLToJSON, dbml, convertDbmlFormatToVueFlow} from '../ERD/dbml-adapter'
+import convertor, {parseDBMLToJSON} from '../ERD/dbml-convertor'
 
 const erdStore = useErdStore()
-const dbmlRaw = erdStore.dbmlRaw || dbml
 
-let db
-try {
-    db = parseDBMLToJSON.parse(dbmlRaw)
-    console.log(db)
-} catch (e) {
-    console.error('Can`t parse dbml', e)
+// @todo
+// 1 dbml
+// 2 yaml (dbml yaml parser format)
+// 3 yaml custom layer extend
+
+const createVueFlowData = (dbmlRaw: String) => {
+    try {
+        return parseDBMLToJSON.parse(dbmlRaw)
+    } catch (e) {
+        console.error('Can`t parse dbml', e)
+    }
 }
 
-const [initialNodes, initialEdges] = convertDbmlFormatToVueFlow(db)
+const db = createVueFlowData(erdStore.dbmlRaw)
+
+
+const [initialNodes, initialEdges] = convertor.convertDbmlStructToVueFlow(db)
+erdStore.applyExtraData(initialNodes, initialEdges)
 erdStore.initTags(initialNodes)
 // init tags
 

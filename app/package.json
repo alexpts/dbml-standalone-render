@@ -21,6 +21,8 @@
     "ace-builds": "^1.14.0",
     "bootstrap": "^5.2.3",
     "bootstrap-vue-3": "^0.5.0",
+    "js-yaml": "^4.1.0",
+    "lodash-es": "^4.17.21",
     "pinia": "^2.0.28",
     "sass": "^1.57.1",
     "vue": "^3.2.45",

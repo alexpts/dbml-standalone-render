@@ -1,11 +1,3 @@
-import {RawDatabase} from "@dbml/core/types/model_structure/database";
-import {Edge, Node} from "@vue-flow/core/dist/types";
-import Table from "@dbml/core/types/model_structure/table";
-import Ref from "@dbml/core/types/model_structure/ref";
-import Endpoint from "@dbml/core/types/model_structure/endpoint";
-
-export {default as parseDBMLToJSON} from '@dbml/core/lib/parse/dbmlParser'
-
 export const dbml = `
 //// -- LEVEL 1
 //// -- Schemas, Tables and References
@@ -112,65 +104,3 @@ Ref: ecommerce.products.merchant_id > ecommerce.merchants.id // many-to-one
 //composite foreign key
 //Ref: ecommerce.merchant_periods.(merchant_id, country_code) > ecommerce.merchants.(id, country_code)
 `
-
-/**
- * Преобразует dbml таблицы/связи в формат для VueFlow
- */
-export const convertDbmlFormatToVueFlow = (db: RawDatabase): [Node[], Edge[]] => {
-    replaceTableNameFromAlias(db)
-    return [
-        db.tables.map(convertTable),
-        db.refs.map(convertRefs),
-    ];
-}
-
-const replaceTableNameFromAlias = (db: RawDatabase): void => {
-    db.refs.map((ref) => {
-        ref.endpoints.map((endpoint: Endpoint) => {
-            const name = endpoint.tableName
-            const alias = db.aliases.find(item => item.kind === 'table' && item.name === name)
-            if (alias) {
-                endpoint.tableName = alias.value.tableName
-            }
-        })
-    })
-}
-
-const convertRefs = (ref: Ref, index): Edge => {
-    const [e0, e1] = ref.endpoints
-
-    return {
-        id: `ref-${index}`,
-        //type: 'custom_edge_1', // @see defaultEdgeOptions
-        source: e0.tableName,
-        sourceHandle: e0.fieldNames[0], // @todo multi fields case
-        target: e1.tableName,
-        targetHandle: e1.fieldNames[0],
-        label: `${e0.tableName}.${e0.fieldNames[0]} [${e0.relation}] :: ${e1.tableName}.${e1.fieldNames[0]} [${e1.relation}]`,
-        data: {
-            sourceRelation: e0.relation,
-            targetRelation: e1.relation,
-        }
-    }
-}
-
-const convertTable = (table: Table, index: number): Node => {
-    return {
-        id: table.name,
-        type: 'table',
-        //position: {x: index * 300, y: 0},
-        position: {x: 0, y: 0}, // после создания node с геометрией делаем расчет и расстановку
-        draggable: true,
-        expandParent: true,
-        connectable: true,
-        data: {
-            dbmlTable: table,
-            tags: ['au'],
-            fields: {
-                id: {
-                    tags: index === 0 ? ['pk'] : []
-                }
-            }
-        }
-    }
-}
