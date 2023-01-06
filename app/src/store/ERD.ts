@@ -16,7 +16,8 @@ interface ErdState {
     _activeTableInfo: GraphNode|null,
     dbmlRaw: string,
     extraData: Object,
-    filters: Filters
+    filters: Filters,
+    editMode: Boolean
 }
 
 export const useErdStore = defineStore('ERD', {
@@ -33,6 +34,7 @@ export const useErdStore = defineStore('ERD', {
         filters: {
             tags: {}
         },
+        editMode: true
     }),
 
     getters: {
@@ -50,13 +52,14 @@ export const useErdStore = defineStore('ERD', {
             // фильтры через OR, не через AND
             const tags = state.filters.tags
             return state.tables.filter(table => {
-                // tags on table
+                // Теги у таблиц
                 const tableHasTag = table.data.tags.find(t => tags[t])
                 if (tableHasTag) {
                     return true;
                 }
 
-                // Теги в фильтрах
+                // Теги у полей
+                // @ts-ignore
                 for (const [_, field] of Object.entries(table.data.fields || {})) {
                     if (field.tags.find(t => tags[t])) {
                         return true

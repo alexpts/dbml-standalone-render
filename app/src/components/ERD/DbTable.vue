@@ -3,7 +3,7 @@
             <div id="title" :style="{background: table.data.headerColor} " class="title" v-tooltip:table.hover.top="{title: table.data.dbmlTable.note || ''}">{{ table.label || table.id }}</div>
             <template v-for="(field) in table.data.dbmlTable.fields" :key="field.name">
                 <div v-if="!field.hidden" class="field nodrag">
-                    <Handle type="source" :position="Position.Left" :connectable="true" :id="field.name" />
+                    <Handle type="source" :position="Position.Left" :connectable="store.editMode" :id="field.name" />
                     <div class="name">{{ field.name }}</div>
                     <div class="type" v-tooltip.hover.right="{title: field.note || ''}">{{ field?.type?.type_name  }}</div>
                 </div>
@@ -18,6 +18,9 @@ import { Handle, Position } from '@vue-flow/core'
 // не работает t-shaking у bootstrap-vue-3 (@todo разобраться)
 import  {vBTooltip as vTooltip} from "bootstrap-vue-3"
 import {GraphNode} from "@vue-flow/core/dist/types/node";
+import {useErdStore} from "../../store/ERD";
+
+const store = useErdStore()
 
 // можно по именам props обращаться без присваивания props и декларации (props = defineProps(), props.table -> можно просто table)
 let props = defineProps<{
@@ -80,12 +83,13 @@ let props = defineProps<{
         font-size: 10px
         padding: 0 0 0 8px
 
-    .field:hover .vue-flow__handle
-        opacity: 1
-        //visibility: visible
-
     .field:hover
         color: #555
         background: #d8e7f3
         //background: #fcfcfc
+
+.edit-mode
+    .field:hover .vue-flow__handle
+        opacity: 1
+        //visibility: visible
 </style>

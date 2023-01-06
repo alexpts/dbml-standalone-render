@@ -33,7 +33,7 @@ console.log(initialNodes)
 </script>
 
 <template>
-    <div class="middle">
+    <div class="middle" :class="{'edit-mode': erdStore.editMode}">
         <div class="aside-panel comp-layer f-col">
             <TagsTableList class="widget"></TagsTableList>
             <TableList class="widget"></TableList>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {VueFlow, useVueFlow, ConnectionMode} from '@vue-flow/core'
 
-import {Controls} from "@vue-flow/controls"
+import {ControlButton, Controls} from "@vue-flow/controls"
 import '@vue-flow/controls/dist/style.css'
 import {Background} from "@vue-flow/background"
 import {MiniMap} from "@vue-flow/minimap"
@@ -30,6 +30,7 @@ const props = defineProps({
 })
 
 let isScrollPane: Ref<boolean> = ref(false)
+const erdElement = ref('')
 
 
 // https://vueflow.dev/guide/vue-flow/config.html#global-edge-options
@@ -37,7 +38,7 @@ let isScrollPane: Ref<boolean> = ref(false)
 let {
     edges, nodes, fitView, onNodeDragStop, onConnect, addEdges, onEdgeUpdate, updateEdge, autoConnect,
     updateNodePositions, onNodeMouseEnter, onNodeMouseLeave, onEdgeMouseEnter, onNodesInitialized,
-    onPaneScroll
+    onPaneScroll, onNodeDoubleClick
 } = useVueFlow({
     //onlyRenderVisibleElements: false, // в DOM только то что на экране видно
     disableKeyboardA11y: false,
@@ -71,11 +72,11 @@ let {
 
 // Расчитываем позиции таблиц на холсте по геометрии таблиц и наличию связей
 let initPosition = (nodes: Ref<GraphNode[]>): void => {
-    // @todo добавить логику основанную на наличией связей
+    // @todo добавить логику основанную на наличии связей
     let x = 0
     let y = 0
     let offset = 80
-    const maxY = 900
+    const maxY = document.documentElement.clientHeight - 200
     let maxWidthInColumn = 0
 
     nodes.value.forEach((table: GraphNode) => {
@@ -128,6 +129,14 @@ onConnect(params => {
     addEdges([params])
 })
 
+const fullscreen = function() {
+    if (!document.fullscreenElement) {
+        document.querySelector('.vue-flow.erd').requestFullscreen()
+    } else {
+        document.exitFullscreen()
+    }
+}
+
 // Обновляем связь при перетаскивании связи
 // onEdgeUpdate(({edge, connection}) => {
 //     updateEdge(edge, connection)
@@ -136,8 +145,10 @@ onConnect(params => {
 </script>
 
 <template>
-    <VueFlow class="erd" :class="{isScrollPane}">
-        <Controls position="top-right"/>
+    <VueFlow ref="erdElement" class="erd" :class="{isScrollPane}">
+        <Controls position="top-right" v-slot:top>
+            <ControlButton @click="fullscreen"><i class="i-resize-full-alt" /></ControlButton>
+        </Controls>
 
         <Background variant="lines" pattern-color="rgb(79 137 224 / 0.2)" gap="40" size="0.5"/>
         <MiniMap nodeColor="#17d8b8" nodeStrokeColor="#333" :pannable="true" :zoomable="true"/>

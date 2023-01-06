@@ -10,6 +10,7 @@ class ConvertorToVueFlow {
     private convertTable(dbmlTable: Table): Node {
         return {
             id: this.getFullTableName(dbmlTable.schemaName, dbmlTable.name),
+            label: dbmlTable.name,
             type: 'table',
             position: {x: 0, y: 0}, // после создания node с геометрией делаем расчет и расстановку
             draggable: true,
