@@ -38,7 +38,7 @@ const erdElement = ref('')
 let {
     edges, nodes, fitView, onNodeDragStop, onConnect, addEdges, onEdgeUpdate, updateEdge, autoConnect,
     updateNodePositions, onNodeMouseEnter, onNodeMouseLeave, onEdgeMouseEnter, onNodesInitialized,
-    onPaneScroll, onNodeDoubleClick
+    onPaneScroll, onNodeDoubleClick, panOnDrag, panOnScroll, panOnScrollSpeed
 } = useVueFlow({
     //onlyRenderVisibleElements: false, // в DOM только то что на экране видно
     disableKeyboardA11y: false,
@@ -53,12 +53,12 @@ let {
     },
     edgeUpdaterRadius: 10,
     connectOnClick: false, // создает edge последовательным кликом на 2 Handle точки межжу ними
-    panOnScroll: true,
+    panOnScroll: store.settings.vueFlow.panOnScroll,
     //fitViewOnInit: true,
     maxZoom: 5,
     minZoom: 0.1,
-    panOnDrag: false, // можно ли тянуть полотно через клиек(зажим) и перемещение мыши
-    //panOnScrollSpeed: 1.0,
+    panOnDrag: store.settings.vueFlow.panOnDrag, // можно ли тянуть полотно через клик(зажим) и перемещение мыши
+    panOnScrollSpeed: store.settings.vueFlow.panOnScrollSpeed, // 1.0 скорость скрола полотна
     elevateEdgesOnSelect: false, // поднимает z-index edge связям активным
     elementsSelectable: false,
     //panOnDrag: false,
@@ -101,6 +101,13 @@ let initPosition = (nodes: Ref<GraphNode[]>): void => {
 store.$patch({
     tables: nodes,
     edges: edges,
+    settings: {
+        vueFlow: {
+            panOnDrag,
+            panOnScroll,
+            panOnScrollSpeed,
+        },
+    }
 })
 
 const paneScrollHandler = debounce(function () {
@@ -123,6 +130,11 @@ onNodesInitialized(() => {
 // onNodeMouseLeave(({connectedEdges, event, node}) => {
 //     connectedEdges.forEach(e => e.selected = false)
 // })
+
+onNodeDoubleClick(({connectedEdges, event, node}) => {
+    debugger
+    console.log(node)
+})
 
 // Добавляем edge при коннекте 2 точек
 onConnect(params => {

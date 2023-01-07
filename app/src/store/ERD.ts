@@ -5,8 +5,14 @@ import {Edge, Node} from "@vue-flow/core/dist/types"
 import {dbml} from '../components/ERD/demo-dbml'
 import {mergeWith} from 'lodash-es'
 
-type Filters = {
-    tags: Object
+class Tag {
+    readonly id: string
+    label?: string
+    isFilterSelected: boolean = false
+
+    constructor(id: string) {
+        this.id = id.toString()
+    }
 }
 
 interface ErdState {
@@ -16,8 +22,15 @@ interface ErdState {
     _activeTableInfo: GraphNode|null,
     dbmlRaw: string,
     extraData: Object,
-    filters: Filters,
-    editMode: Boolean
+    tags: Record<string, Tag>,
+    settings: {
+        editMode: boolean,
+        vueFlow: {
+            panOnDrag: boolean,
+            panOnScroll: boolean,
+            panOnScrollSpeed: number
+        }
+    }
 }
 
 export const useErdStore = defineStore('ERD', {
@@ -31,37 +44,50 @@ export const useErdStore = defineStore('ERD', {
         edges: [],
         singleModeTable: null,
         _activeTableInfo: null,
-        filters: {
-            tags: {}
+        tags: {
+            ro: new Tag('ro')
         },
-        editMode: true
+        settings: {
+            editMode: false,
+            vueFlow: {
+                panOnDrag: false,
+                panOnScroll: true,
+                panOnScrollSpeed: 1.4,
+            }
+        }
     }),
 
     getters: {
-        tablesByTags: (state) => {
-            let activeTagCount = 0
+        isFilterSelectedTags(): Record<string, Tag> {
+            const result: Record<string, Tag> = {}
+
             // @ts-ignore
-            for (const [_, isActive] of Object.entries(state.filters.tags)) {
-                isActive && activeTagCount++
+            for (const tag of Object.values(this.tags)) {
+                if (tag.isFilterSelected) {
+                    result[tag.id] = tag
+                }
             }
 
-            if (activeTagCount === 0) {
+            return result
+        },
+
+        tablesByTags(state) {
+            if (Object.keys(this.isFilterSelectedTags).length === 0) {
                 return state.tables
             }
 
             // фильтры через OR, не через AND
-            const tags = state.filters.tags
             return state.tables.filter(table => {
                 // Теги у таблиц
-                const tableHasTag = table.data.tags.find(t => tags[t])
-                if (tableHasTag) {
+                const isSelectedTag = table.data.tags.find(t => this.tags[t].isFilterSelected)
+                if (isSelectedTag) {
                     return true;
                 }
 
                 // Теги у полей
                 // @ts-ignore
-                for (const [_, field] of Object.entries(table.data.fields || {})) {
-                    if (field.tags.find(t => tags[t])) {
+                for (const field of Object.values(table.data.fields || {})) {
+                    if (field.tags.find(t => this.tags[t].isFilterSelected)) {
                         return true
                     }
                 }
@@ -69,44 +95,25 @@ export const useErdStore = defineStore('ERD', {
                 return false
             })
         },
-        tags: (state) => state.filters.tags,
         visibleTables: (state) => state.tables.filter(t => !t.hidden),
-        activeTableInfo: (state) => {
-            let table = state._activeTableInfo || state.tables[0] || null
-            if (table === null) {
-                return null
-            }
-
-            const t = table.data.dbmlTable;
-
-            return {
-                name: t.name,
-                note: t.note,
-                tags: t.tags || [],
-                fields: t.fields.map((field) => {
-                    return {
-                        name: field.name,
-                        note: field.note,
-                        type: field.type.schemaName ? field.type.schemaName + '.' + field.type.type_name : field.type.type_name,
-                        tags: field.tags || []
-                    }
-                })
-            }
+        activeTableInfo: (state): GraphNode|null => {
+            return state._activeTableInfo || state.tables[0] || null;
         },
     },
 
     actions: {
         initTags(nodes: Node[]): void {
-            nodes.forEach((node: Node) => {
-                node.data.tags.forEach(tag => {
-                    this.filters.tags[tag] = false
+            nodes.forEach((table: Node) => {
+                // По таблицам
+                table.data.tags.forEach(tag => {
+                    this.tags[tag] = new Tag(tag)
                 })
 
-                node.data.fields ??= {}
+                // По полям
                 // @ts-ignore
-                for (const [_, data] of Object.entries(node.data.fields)) {
-                    data.tags.forEach(tag => {
-                        this.filters.tags[tag] = false
+                for (const field of Object.values(table.data.fields)) {
+                    field.tags.forEach(tag => {
+                        this.tags[tag] = new Tag(tag)
                     })
                 }
             })

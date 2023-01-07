@@ -13,10 +13,13 @@ import {ref} from "vue";
 const erdStore = useErdStore()
 
 const yamlContent = ref(`nodes:
-    countries:
+    public.countries:
         data:
             headerColor: red
-            tags: [1, 2, 'sd']`)
+            tags: [sd]
+            fields:
+                code:
+                    tags: [pk]`)
 
 // @todo add local storage
 const dbmlContent = ref('' + erdStore.dbmlRaw)

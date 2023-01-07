@@ -8,6 +8,12 @@ export {default as parseDBMLToJSON} from '@dbml/core/lib/parse/dbmlParser'
 
 class ConvertorToVueFlow {
     private convertTable(dbmlTable: Table): Node {
+        const fields = Object.fromEntries(dbmlTable.fields.map(dbmlField => {
+            const field = {...dbmlField, tags: []};
+            delete field.token;
+            return [field.name, field]
+        }));
+
         return {
             id: this.getFullTableName(dbmlTable.schemaName, dbmlTable.name),
             label: dbmlTable.name,
@@ -17,20 +23,17 @@ class ConvertorToVueFlow {
             expandParent: true,
             connectable: true,
             data: {
-                dbmlTable: dbmlTable,
                 tags: [],
-                fields: {
-                    id: {
-                        tags: []
-                    }
-                }
+                fields: fields,
+                note: dbmlTable.note
             }
         }
     }
 
     private getFullTableName(schema: string, name: string): string
     {
-        return schema ? schema + '.' + name : name
+        schema = schema || 'public';
+        return schema + '.' + name
     }
 
     /**

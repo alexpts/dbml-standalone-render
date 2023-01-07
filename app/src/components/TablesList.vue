@@ -13,8 +13,7 @@ const showTableMap = ref({}) // @todo save to local storage
 
 const filterByTableId = (t: GraphNode) => t.id.includes(search.value)
 const filterByField = (t: GraphNode) => {
-    const foundField = t.data.dbmlTable.fields.find(f => f.name === search.value)
-    return foundField !== undefined
+    return t.data.fields[search.value]
 }
 
 // Вычисляет список отфильтрованных таблиц
@@ -35,15 +34,6 @@ const changeSearchMode = (mode: string) => searchMode.value = mode
 
 const toggleChildList = (table) => {
     showTableMap.value[table.id] = !showTableMap.value[table.id]
-}
-
-// Getter
-const getTableNameWithNamespace = (table: GraphNode): string => {
-    return table.id
-    // let prefix = table.data.dbmlTable.schemaName
-    // prefix = prefix ? prefix + '.' : ''
-    //
-    // return prefix + (table.label || table.id)
 }
 
 </script>
@@ -67,13 +57,13 @@ const getTableNameWithNamespace = (table: GraphNode): string => {
                  v-for="(table) in filteredTables" :key="table.id"
             >
                 <i @click.stop="toggleChildList(table)" :class="[showTableMap[table.id] ? 'i-folder-open' : 'i-folder']"></i>
-                <span @click="store._activeTableInfo = table" class="title invisible-scrollbar">{{ getTableNameWithNamespace(table) }}</span>
+                <span @click="store._activeTableInfo = table" class="title invisible-scrollbar">{{ table.label || table.id }}</span>
 
                 <i class="i-target" :class="{singleMode: store.singleModeTable?.id === table.id}" @click.stop="store.actionModeSingleTable(table)" v-b-tooltip.hover.top="'Режим таблицы'"></i>
                 <i @click="table.hidden = !table.hidden" :class="[table.hidden ? 'i-eye-off' : 'i-eye']" v-b-tooltip.hover.top="table.hidden ? 'Показать' : 'Скрыть'"></i>
 
                 <div class="fields" v-if="showTableMap[table.id]" >
-                    <template v-for="(field) in table.data.dbmlTable.fields">
+                    <template v-for="(field) in table.data.fields">
                         <div
                             @click.stop="field.hidden = ! field.hidden"
                             class="field"

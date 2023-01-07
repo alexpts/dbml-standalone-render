@@ -2,18 +2,14 @@
 import {useErdStore} from "../store/ERD.js"
 
 const store = useErdStore()
-
-const toggleActive = (tag, oldValue) => {
-    store.tags[tag] = !oldValue
-}
 </script>
 
 <template>
-    <div class="tags-list" v-if="Object.entries(store.tags).length">
+    <div class="tags-list" v-if="Object.keys(store.tags).length">
         <h6 class="w-title">Теги:</h6>
         <div>
-            <span @click="toggleActive(tag, value)" class="tag" :class="{active: store.tags[tag]}" v-for="(value, tag) in store.tags" :key="tag">
-                {{ tag }}
+            <span @click="tag.isFilterSelected ^= true" class="tag" :class="{active: tag.isFilterSelected}" v-for="(tag, id) in store.tags" :key="id">
+                {{ tag.label || tag.id }}
             </span>
         </div>
     </div>

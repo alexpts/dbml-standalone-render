@@ -1,9 +1,9 @@
 <template>
         <div class="db-table">
-            <div id="title" :style="{background: table.data.headerColor} " class="title" v-tooltip:table.hover.top="{title: table.data.dbmlTable.note || ''}">{{ table.label || table.id }}</div>
-            <template v-for="(field) in table.data.dbmlTable.fields" :key="field.name">
+            <div id="title" :style="{background: table.data.headerColor} " class="title" v-tooltip:table.hover.top="{title: table.data.note || ''}">{{ table.label || table.id }}</div>
+            <template v-for="(field) in table.data.fields" :key="field.name">
                 <div v-if="!field.hidden" class="field nodrag">
-                    <Handle type="source" :position="Position.Left" :connectable="store.editMode" :id="field.name" />
+                    <Handle type="source" :position="Position.Left" :connectable="store.settings.editMode" :id="field.name" />
                     <div class="name">{{ field.name }}</div>
                     <div class="type" v-tooltip.hover.right="{title: field.note || ''}">{{ field?.type?.type_name  }}</div>
                 </div>

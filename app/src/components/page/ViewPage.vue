@@ -3,10 +3,13 @@
 import ERD from '../ERD/Flow.vue'
 import TableList from '../TablesList.vue'
 import TagsTableList from '../TagsTableList.vue'
+import Settings from '../Settings.vue'
+
 import {useErdStore} from "../../store/ERD";
 import convertor, {parseDBMLToJSON} from '../ERD/dbml-convertor'
+import ActiveTableInfo from "../ActiveTableInfo.vue";
 
-const erdStore = useErdStore()
+const store = useErdStore()
 
 // @todo
 // 1 dbml
@@ -21,32 +24,28 @@ const createVueFlowData = (dbmlRaw: String) => {
     }
 }
 
-const db = createVueFlowData(erdStore.dbmlRaw)
-
+const db = createVueFlowData(store.dbmlRaw)
 
 const [initialNodes, initialEdges] = convertor.convertDbmlStructToVueFlow(db)
-erdStore.applyExtraData(initialNodes, initialEdges)
-erdStore.initTags(initialNodes)
-// init tags
+store.applyExtraData(initialNodes, initialEdges)
+store.initTags(initialNodes)
 
 console.log(initialNodes)
 </script>
 
 <template>
-    <div class="middle" :class="{'edit-mode': erdStore.editMode}">
+    <div class="middle" :class="{'edit-mode': store.settings.editMode}">
         <div class="aside-panel comp-layer f-col">
-            <TagsTableList class="widget"></TagsTableList>
-            <TableList class="widget"></TableList>
+            <TagsTableList class="widget" />
+            <TableList class="widget" />
+            <Settings class="widget" />
         </div>
         <div class="content comp-layer f-col">
             <div class="project">
                 <h4>Проект: {{ db.project?.name || "Новый проект" }}</h4>
                 {{db.project?.note}}
             </div>
-            <div class="table-fields" v-if="erdStore.activeTableInfo">
-                <h4>Таблица: {{ erdStore.activeTableInfo.name }}</h4>
-                <b-table style="font-size: 12px" striped="" hover="" :fields="['name', 'type', 'note']" :items="erdStore.activeTableInfo.fields"></b-table>
-            </div>
+            <ActiveTableInfo />
 
             <ERD :initialNodes="initialNodes" :initialEdges="initialEdges"></ERD>
         </div>
@@ -62,6 +61,7 @@ console.log(initialNodes)
         border-bottom: 1px solid #eee
         padding: 4px
         .w-title
+            cursor: pointer
             padding: 8px
             margin: 0
             font-size: 14px
