@@ -1,12 +1,23 @@
-export const dbml = `
+Project "Sample Project" {
+  database_type: 'PostgreSQL'
+  Note: '''
+  Description of the project
+
+  Multiline description👨‍💻
+
+  Support ***markdown*** **and** *html* via `markdown-it` module
+
+  Support emoji 💡 🚀 🌎 🎲
+  '''
+}
+
 //// -- LEVEL 1
 //// -- Schemas, Tables and References
 
 // Creating tables
 // You can define the tables with full schema names
-
 Table ecommerce.merchants {
-  id int(8, 3)
+  id int
   country_code int
   merchant_name varchar
 
@@ -15,8 +26,6 @@ Table ecommerce.merchants {
   Indexes {
     (id, country_code) [pk]
   }
-
-   note: "Описание таблицы"
 }
 
 // If schema name is omitted, it will default to "public" schema.
@@ -31,13 +40,13 @@ Table countries {
   code int [pk]
   name varchar
   continent_name varchar
-}
+ }
 
 // Creating references
-// You can also define relaionship separately
+// You can also define relationship separately
 // > many-to-one; < one-to-many; - one-to-one; <> many-to-many
-//Ref: U.country_code > countries.code
-//Ref: ecommerce.merchants.country_code > countries.code
+Ref: U.country_code > countries.code
+Ref: ecommerce.merchants.country_code > countries.code
 
 //----------------------------------------------//
 
@@ -50,7 +59,7 @@ Table ecommerce.order_items {
   quantity int [default: 1] // default value
 }
 
-//Ref: ecommerce.order_items.product_id > ecommerce.products.id
+Ref: ecommerce.order_items.product_id > ecommerce.products.id
 
 Table ecommerce.orders {
   id int [pk] // primary key
@@ -78,7 +87,7 @@ Table ecommerce.products {
   merchant_id int [not null]
   price int
   status ecommerce.products_status
-  created_at datetime [default: \`now()\`]
+  created_at datetime [default: `now()`]
 
   Indexes {
     (merchant_id, status) [name:'product_status']
@@ -86,21 +95,20 @@ Table ecommerce.products {
   }
 }
 
-// Table ecommerce.product_tags {
-//   id int [pk]
-//   name varchar
-// }
+Table ecommerce.product_tags {
+  id int [pk]
+  name varchar
+}
 
-// Table ecommerce.merchant_periods {
-//   id int [pk]
-//   merchant_id int
-//   country_code int
-//   start_date datetime
-//   end_date datetime
-// }
+Table ecommerce.merchant_periods {
+  id int [pk]
+  merchant_id int
+  country_code int
+  start_date datetime
+  end_date datetime
+}
 
 Ref: ecommerce.products.merchant_id > ecommerce.merchants.id // many-to-one
-//Ref: ecommerce.product_tags.id <> ecommerce.products.id // many-to-many
+Ref: ecommerce.product_tags.id <> ecommerce.products.id // many-to-many
 //composite foreign key
-//Ref: ecommerce.merchant_periods.(merchant_id, country_code) > ecommerce.merchants.(id, country_code)
-`
+Ref: ecommerce.merchant_periods.(merchant_id, country_code) > ecommerce.merchants.(id, country_code)

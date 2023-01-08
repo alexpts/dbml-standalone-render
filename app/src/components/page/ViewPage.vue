@@ -7,7 +7,8 @@ import Settings from '../Settings.vue'
 
 import {useErdStore} from "../../store/ERD";
 import convertor, {parseDBMLToJSON} from '../ERD/dbml-convertor'
-import ActiveTableInfo from "../ActiveTableInfo.vue";
+import ActiveTableInfo from "../ActiveTableInfo.vue"
+import ProjectInfo from "../ProjectInfo.vue"
 
 const store = useErdStore()
 
@@ -41,10 +42,7 @@ console.log(initialNodes)
             <Settings class="widget" />
         </div>
         <div class="content comp-layer f-col">
-            <div class="project">
-                <h4>Проект: {{ db.project?.name || "Новый проект" }}</h4>
-                {{db.project?.note}}
-            </div>
+            <ProjectInfo :name="db.project?.name" :note="db.project?.note || ''" />
             <ActiveTableInfo />
 
             <ERD :initialNodes="initialNodes" :initialEdges="initialEdges"></ERD>

@@ -2,8 +2,10 @@ import {defineStore} from 'pinia'
 import {GraphNode} from "@vue-flow/core/dist/types/node"
 import {GraphEdge} from "@vue-flow/core/dist/types/edge"
 import {Edge, Node} from "@vue-flow/core/dist/types"
-import {dbml} from '../components/ERD/demo-dbml'
 import {mergeWith} from 'lodash-es'
+
+// @ts-ignore
+import dbml from "../../example.dbml?raw"
 
 class Tag {
     readonly id: string
@@ -44,15 +46,13 @@ export const useErdStore = defineStore('ERD', {
         edges: [],
         singleModeTable: null,
         _activeTableInfo: null,
-        tags: {
-            ro: new Tag('ro')
-        },
+        tags: { ro: new Tag('ro') } as Record<string, Tag>,
         settings: {
             editMode: false,
             vueFlow: {
                 panOnDrag: false,
                 panOnScroll: true,
-                panOnScrollSpeed: 1.4,
+                panOnScrollSpeed: 1.2,
             }
         }
     }),
@@ -62,7 +62,7 @@ export const useErdStore = defineStore('ERD', {
             const result: Record<string, Tag> = {}
 
             // @ts-ignore
-            for (const tag of Object.values(this.tags)) {
+            for (const tag of Object.values(this.tags) as Tag) {
                 if (tag.isFilterSelected) {
                     result[tag.id] = tag
                 }
