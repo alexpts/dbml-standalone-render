@@ -16,7 +16,7 @@
     "@popperjs/core": "^2.11.6",
     "@vue-flow/background": "^1.0.2",
     "@vue-flow/controls": "^1.0.1",
-    "@vue-flow/core": "1.10.3",
+    "@vue-flow/core": "1.11.1",
     "@vue-flow/minimap": "^1.0.1",
     "ace-builds": "^1.14.0",
     "bootstrap": "^5.2.3",
@@ -30,6 +30,7 @@
     "vue3-ace-editor": "^2.2.2"
   },
   "devDependencies": {
+    "@types/node": "^18.11.18",
     "@vitejs/plugin-vue": "^4.0.0",
     "unplugin-vue-components": "^0.22.12",
     "vite": "^4.0.4",
