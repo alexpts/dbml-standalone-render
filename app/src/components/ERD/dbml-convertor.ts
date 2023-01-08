@@ -15,6 +15,7 @@ class ConvertorToVueFlow {
         }));
 
         return {
+            // @ts-ignore
             id: this.getFullTableName(dbmlTable.schemaName, dbmlTable.name),
             label: dbmlTable.name,
             type: 'table',
@@ -50,7 +51,7 @@ class ConvertorToVueFlow {
         }
 
         for (let i = 0; i < db.refs.length; i++) {
-            edges.push(this.convertRefs(db.refs[i], i++))
+            edges.push(this.convertRefs(db.refs[i], i))
         }
 
         return [nodes, edges]
@@ -76,6 +77,7 @@ class ConvertorToVueFlow {
         db.refs.map((ref) => {
             ref.endpoints.map((endpoint: Endpoint) => {
                 const name = endpoint.tableName
+                // @ts-ignore
                 const alias = db.aliases.find(item => item.kind === 'table' && item.name === name)
                 if (alias) {
                     endpoint.tableName = alias.value.tableName
