@@ -1,6 +1,6 @@
 root = true
 
-[*.{yml,yaml}]
+[*.{yml,yaml,g4}]
 indent_style = space
 indent_size = 2
 charset = utf-8
