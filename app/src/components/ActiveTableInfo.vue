@@ -2,6 +2,12 @@
 import {useErdStore} from "../store/ERD.js"
 const store = useErdStore()
 
+const toggleTag = (tags: string[], tagId: string): void => {
+    const pos = tags.indexOf(tagId)
+    pos === -1
+        ? tags.push(tagId)
+        : tags.splice(pos, 1)
+}
 </script>
 
 <template>
@@ -27,9 +33,31 @@ const store = useErdStore()
                 <template v-else>{{ data.value }}</template>
             </template>
 
+            <template v-slot:cell(tags)="data">
+                <span class="tag" @click="toggleTag(data.value, tag.id)" :class="{active: data.value.indexOf(id) !== -1}" v-for="(tag, id) in store.tags" :key="id">
+                    {{ tag.label || tag.id }}
+                </span>
+            </template>
+
         </b-table>
     </div>
 </template>
 
 <style scoped lang="sass">
+.tag
+    margin: 0 4px
+    padding: 0 6px
+    border-radius: 8px
+    font-size: 14px
+    background: #fff
+    color: #777
+    cursor: pointer
+    display: inline-block
+    border: 1px solid #e7e7e7
+
+    &:hover
+        border: 1px solid #ddd
+    &.active
+        background: #316997
+        color: #eee
 </style>
