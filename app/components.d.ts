@@ -11,7 +11,6 @@ declare module '@vue/runtime-core' {
     BButton: typeof import('bootstrap-vue-3')['BButton']
     BCollapse: typeof import('bootstrap-vue-3')['BCollapse']
     BFormCheckbox: typeof import('bootstrap-vue-3')['BFormCheckbox']
-    BFormGroup: typeof import('bootstrap-vue-3')['BFormGroup']
     BFormInput: typeof import('bootstrap-vue-3')['BFormInput']
     BFormTextarea: typeof import('bootstrap-vue-3')['BFormTextarea']
     BTable: typeof import('bootstrap-vue-3')['BTable']
