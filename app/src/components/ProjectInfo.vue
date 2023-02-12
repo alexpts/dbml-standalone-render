@@ -30,7 +30,7 @@ const props = defineProps({
 <template>
     <div class="project">
         <h4>Проект: {{ props.name }}</h4>
-        <div v-html="markdownFilter(props.note)"></div>
+        <div v-html="markdownFilter(props.note.value)"></div>
     </div>
 </template>
 
