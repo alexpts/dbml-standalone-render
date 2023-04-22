@@ -4,40 +4,43 @@
   "version": "0.0.1",
   "type": "module",
   "engines": {
-    "node": "^19"
+    "node": "^20"
   },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build-docs": "vite build --base=/dbml-standalone-render/",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@dbml/core": "2.5.0",
-    "@popperjs/core": "2.11.6",
-    "@vue-flow/background": "1.0.3",
-    "@vue-flow/controls": "1.0.2",
-    "@vue-flow/core": "1.14.2",
-    "@vue-flow/minimap": "1.0.2",
-    "ace-builds": "1.15.0",
+    "@dbml/core": "2.5.3",
+    "@popperjs/core": "2.11.7",
+    "@vue-flow/background": "1.2.0",
+    "@vue-flow/controls": "1.0.5",
+    "@vue-flow/core": "1.19.0",
+    "@vue-flow/minimap": "1.1.1",
+    "ace-builds": "1.18.0",
     "bootstrap": "5.2.3",
-    "bootstrap-vue-3": "0.5.1",
+    "bootstrap-vue-next": "^0.8.6",
     "js-yaml": "4.1.0",
     "lodash-es": "4.17.21",
     "markdown-it": "13.0.1",
-    "pinia": "2.0.30",
-    "sass": "1.58.0",
+    "pinia": "2.0.35",
+    "sass": "1.62.0",
     "typescript": "4.9.5",
     "vue": "3.2.47",
     "vue-router": "4.1.6",
-    "vue-tsc": "1.0.24",
+    "vue-tsc": "1.4.3",
     "vue3-ace-editor": "^2.2.2"
   },
   "devDependencies": {
-    "@types/node": "^18.13.0",
-    "@vitejs/plugin-vue": "4.0.0",
-    "unplugin-vue-components": "0.23.0",
-    "vite": "4.1.1",
+    "@types/js-yaml": "^4.0.5",
+    "@types/lodash-es": "^4.17.7",
+    "@types/node": "^18.13",
+    "@vitejs/plugin-vue": "4.1.0",
+    "unplugin-vue-components": "0.24.1",
+    "vite": "4.3.1",
     "vite-plugin-compression": "0.5.1",
-    "vite-plugin-singlefile": "0.13.3"
+    "vite-plugin-singlefile": "0.13.5"
   }
 }

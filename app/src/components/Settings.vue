@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {useErdStore} from "../store/ERD.js"
-import {vBToggle} from "bootstrap-vue-3";
+import {vBToggle} from "bootstrap-vue-next";
 const store = useErdStore()
 </script>
 

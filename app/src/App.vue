@@ -2,7 +2,7 @@
 
 //import './style.css'
 import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue-3/dist/bootstrap-vue-3.css'
+import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
 
 import './vendor/fontello/dbml-embedded.css'
 </script>

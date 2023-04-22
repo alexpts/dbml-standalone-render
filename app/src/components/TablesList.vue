@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import {GraphNode} from "@vue-flow/core/dist/types/node";
-import {vBTooltip} from "bootstrap-vue-3"
 
 import {ref, computed} from "vue";
 import {useErdStore} from "../store/ERD.js"
+import {vBTooltip} from "bootstrap-vue-next"
+import {GraphNode} from "@vue-flow/core/dist/types/node";
 
 const store = useErdStore()
 

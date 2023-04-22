@@ -1,7 +1,5 @@
 import {defineStore} from 'pinia'
-import {GraphNode} from "@vue-flow/core/dist/types/node"
-import {GraphEdge} from "@vue-flow/core/dist/types/edge"
-import {Edge, Node} from "@vue-flow/core/dist/types"
+import {Edge, Node, GraphNode, GraphEdge} from "@vue-flow/core/dist/types"
 import {mergeWith} from 'lodash-es'
 
 // @ts-ignore

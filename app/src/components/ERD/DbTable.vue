@@ -1,11 +1,11 @@
 <template>
         <div class="db-table">
-            <div id="title" :style="{background: table.data.headerColor} " class="title" v-tooltip:table.hover.top="{title: table.data.note || ''}">{{ table.label || table.id }}</div>
+            <div id="title" :style="{background: table.data.headerColor} " class="title" v-b-tooltip:table.hover.top="{title: table.data.note || ''}">{{ table.label || table.id }}</div>
             <template v-for="(field) in table.data.fields" :key="field.name">
                 <div v-if="!field.hidden" class="field nodrag">
                     <Handle type="source" :position="Position.Left" :connectable="store.settings.editMode" :id="field.name" />
                     <div class="name">{{ field.name }}</div>
-                    <div class="type" v-tooltip.hover.right="{title: field.note || ''}">{{ field?.type?.type_name  }}</div>
+                    <div class="type" v-b-tooltip.hover.right="{title: field.note || ''}">{{ field?.type?.type_name  }}</div>
                 </div>
             </template>
         </div>
@@ -15,10 +15,9 @@
 
 import { Handle, Position } from '@vue-flow/core'
 
-// не работает t-shaking у bootstrap-vue-3 (@todo разобраться)
-import  {vBTooltip as vTooltip} from "bootstrap-vue-3"
-import {GraphNode} from "@vue-flow/core/dist/types/node";
 import {useErdStore} from "../../store/ERD";
+import {vBTooltip} from "bootstrap-vue-next";
+import {GraphNode} from "@vue-flow/core/dist/types";
 
 const store = useErdStore()
 
