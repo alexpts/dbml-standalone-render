@@ -1,6 +1,6 @@
 <template>
         <div class="db-table">
-            <div id="title" :style="{background: table.data.headerColor} " class="title" v-b-tooltip:table.hover.top="{title: table.data.note || ''}">{{ table.label || table.id }}</div>
+            <div :style="{background: table.data.headerColor} " class="title" v-b-tooltip:erd-container="{title: table.data.note || ''}">{{ table.label || table.id }}</div>
             <template v-for="(field) in table.data.fields" :key="field.name">
                 <div v-if="!field.hidden" class="field nodrag">
                     <Handle type="source" :position="Position.Left" :connectable="store.settings.editMode" :id="field.name" />

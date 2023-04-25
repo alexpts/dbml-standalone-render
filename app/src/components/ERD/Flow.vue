@@ -143,7 +143,7 @@ onConnect(params => {
 
 const fullscreen = function() {
     if (!document.fullscreenElement) {
-        document.querySelector('.vue-flow.erd').requestFullscreen()
+        document.querySelector('#erd-container').requestFullscreen()
     } else {
         document.exitFullscreen()
     }

@@ -45,7 +45,9 @@ console.log(initialNodes)
             <ProjectInfo :name="db.project?.name" :note="db.project?.note || ''" />
             <ActiveTableInfo />
 
-            <ERD :initialNodes="initialNodes" :initialEdges="initialEdges"></ERD>
+            <div id="erd-container">
+                <ERD :initialNodes="initialNodes" :initialEdges="initialEdges"></ERD>
+            </div>
         </div>
     </div>
 </template>
