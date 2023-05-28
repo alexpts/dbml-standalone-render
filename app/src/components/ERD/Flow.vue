@@ -44,7 +44,7 @@ let {
     disableKeyboardA11y: false,
     zoomOnScroll: false,
     connectionMode: ConnectionMode.Loose, // можно соединят между собой и source/target <-> source/target без проверки типа
-    autoConnect: true, // дефолтный обрабочтик для соединения 2 точек
+    autoConnect: true, // дефолтный обработчик для соединения 2 точек
     defaultEdgeOptions: {
         type: 'custom_edge_1',
         updatable: true,
@@ -52,7 +52,7 @@ let {
         selectable: true,
     },
     edgeUpdaterRadius: 10,
-    connectOnClick: false, // создает edge последовательным кликом на 2 Handle точки межжу ними
+    connectOnClick: false, // создает edge последовательным кликом на 2 Handle точки между ними
     panOnScroll: store.settings.vueFlow.panOnScroll,
     //fitViewOnInit: true,
     maxZoom: 5,
@@ -60,7 +60,7 @@ let {
     panOnDrag: store.settings.vueFlow.panOnDrag, // можно ли тянуть полотно через клик(зажим) и перемещение мыши
     panOnScrollSpeed: store.settings.vueFlow.panOnScrollSpeed, // 1.0 скорость скрола полотна
     elevateEdgesOnSelect: false, // поднимает z-index edge связям активным
-    elementsSelectable: false,
+    elementsSelectable: true,
     //panOnDrag: false,
     //snapGrid: [50, 50],
     snapToGrid: false, // перетягиваем шагами
