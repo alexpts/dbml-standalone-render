@@ -81,6 +81,7 @@ let props = defineProps<{
         color: #ccc
         font-size: 10px
         padding: 0 0 0 8px
+        margin-left: auto
 
     .field:hover
         color: #555

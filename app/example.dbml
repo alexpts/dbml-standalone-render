@@ -17,7 +17,7 @@ Project "Sample Project" {
 // Creating tables
 // You can define the tables with full schema names
 Table ecommerce.merchants {
-  id int
+  id int [note: "комментарий к полю"]
   country_code int
   merchant_name varchar
 

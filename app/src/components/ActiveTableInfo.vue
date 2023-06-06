@@ -16,22 +16,22 @@ const toggleTag = (tags: string[], tagId: string): void => {
         <!-- add `refs` column -->
         <b-table
             style="font-size: 12px" striped="" hover=""
-            :fields="['name', 'type', 'note', 'tags']"
+            :fields="['name', 'type', 'tags']"
             :items="store.activeTableInfo.data.fields"
         >
             <template v-slot:cell(type)="data">
                 {{ data.value.type_name }}
             </template>
 
-            <template #cell(note)="data">
-                <b-form-textarea size="sm" v-if="store.settings.editMode"
-                    v-model="data.value"
-                    placeholder="note..."
-                    rows="1"
-                    max-rows="6"
-                />
-                <template v-else>{{ data.value }}</template>
-            </template>
+<!--            <template #cell(note)="data">-->
+<!--                <b-form-textarea size="sm" v-if="store.settings.editMode"-->
+<!--                    v-model="data.value"-->
+<!--                    placeholder="note..."-->
+<!--                    rows="1"-->
+<!--                    max-rows="6"-->
+<!--                />-->
+<!--                <template v-else>{{ data.value["value"] }}</template>-->
+<!--            </template>-->
 
             <template v-slot:cell(tags)="data">
                 <span class="tag" @click="toggleTag(data.value, tag.id)" :class="{active: data.value.indexOf(id) !== -1}" v-for="(tag, id) in store.tags" :key="id">
