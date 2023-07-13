@@ -10,7 +10,9 @@ class ConvertorToVueFlow {
     private convertTable(dbmlTable: Table): Node {
         const fields = Object.fromEntries(dbmlTable.fields.map(dbmlField => {
             const field = {...dbmlField, tags: []};
-            delete field.token;
+
+            field.note = dbmlField.note ? dbmlField.note.value : "" // fixed note, TS type is not correct bad
+            delete field.token
             return [field.name, field]
         }));
 
@@ -26,7 +28,7 @@ class ConvertorToVueFlow {
             data: {
                 tags: [],
                 fields: fields,
-                note: dbmlTable.note
+                note: dbmlTable.note || ""
             }
         }
     }
